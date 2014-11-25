@@ -1,0 +1,24 @@
+- name: RoCKIn@Home Task Benchmark 1
+  desc: Getting to know my home
+  code: HGTKMH
+  timeout: 600.000
+- name: RoCKIn@Home Task Benchmark 2
+  desc: Welcoming visitors
+  code: HWV
+  timeout: 600.000
+- name: RoCKIn@Home Task Benchmark 3
+  desc: Catering for Granny Annie's Comfort
+  code: HCFGAC
+  timeout: 600.000
+- name: RoCKIn@Home Functionality Benchmark 1
+  desc: Object Perception Functionality
+  code: HOPF
+  timeout: 120.000
+- name: RoCKIn@Home Functionality Benchmark 2
+  desc: Object Manipulation Functionality
+  code: HOMF
+  timeout: 600.000
+- name: RoCKIn@Home Functionality Benchmark 3
+  desc: Speech Understanding Functionality
+  code: HSUF
+  timeout: 120.000

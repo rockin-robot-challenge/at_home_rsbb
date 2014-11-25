@@ -1,0 +1,11 @@
+<launch>
+
+  <group ns="$(anon roah_rsbb_client)">
+
+    <node pkg="rqt_gui" type="rqt_gui" name="roah_rsbb_gui" respawn="true" args="--perspective-file $(find roah_rsbb)/roah_rsbb.perspective -l -f"/>
+
+    <node pkg="roah_rsbb" type="shutdown_service" name="roah_rsbb_shutdown" required="true"/>
+
+  </group>
+
+</launch>

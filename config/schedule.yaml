@@ -1,0 +1,43 @@
+# All scheduled_time entries must be in UTC!
+# http://rm.isr.ist.utl.pt/attachments/605/RockIn_2014_competition_schedule.pdf
+
+- zone: Day 1, Task Benchmarks Area
+  schedule:
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 07:02:30, team: R1HT01 }
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 07:27:30, team: R1HT02 }
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 07:52:30, team: R1HT03 }
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 08:17:30, team: R1HT04 }
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 08:42:30, team: R1HT05 }
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 09:07:30, team: R1HT06 }
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 09:32:30, team: R1HT07 }
+
+    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 12:07:30, team: R1HT01 }
+    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 12:32:30, team: R1HT02 }
+    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 12:57:30, team: R1HT03 }
+    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 13:22:30, team: R1HT04 }
+    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 13:47:30, team: R1HT05 }
+    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 14:12:30, team: R1HT06 }
+
+    - { benchmark: HSUF, round: 1, run: 1, scheduled_time: 2014-11-28 15:27:30, team: ALL }
+
+    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 17:07:30, team: R1HT07 }
+    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 17:32:30, team: R1HT08 }
+
+
+- zone: Day 1, Functionality Benchmarks Area
+  schedule:
+    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 07:02:30, team: R1HT05 }
+    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 07:27:30, team: R1HT06 }
+    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 07:52:30, team: R1HT07 }
+    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 08:17:30, team: R1HT01 }
+    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 08:42:30, team: R1HT08 }
+    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 09:07:30, team: R1HT03 }
+    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 09:32:30, team: R1HT04 }
+
+    - { benchmark: HOMF, round: 1, run: 1, scheduled_time: 2014-11-28 12:57:30, team: R1HT07 }
+    - { benchmark: HOMF, round: 1, run: 1, scheduled_time: 2014-11-28 13:22:30, team: R1HT08 }
+
+    - { benchmark: HOMF, round: 1, run: 1, scheduled_time: 2014-11-28 17:07:30, team: R1HT01 }
+    - { benchmark: HOMF, round: 1, run: 1, scheduled_time: 2014-11-28 17:32:30, team: R1HT03 }
+    - { benchmark: HOMF, round: 1, run: 1, scheduled_time: 2014-11-28 17:57:30, team: R1HT04 }
+    - { benchmark: HOMF, round: 1, run: 1, scheduled_time: 2014-11-28 18:22:30, team: R1HT05 }
