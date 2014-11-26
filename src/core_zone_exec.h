@@ -42,6 +42,7 @@ class ExecutingBenchmark
 
     roah_rsbb_msgs::BenchmarkState::State state_;
     enum { PHASE_PRE, PHASE_EXEC, PHASE_POST } phase_;
+    bool stoped_due_to_timeout_;
     Time start_time_;
     Time last_stop_time_;
     string state_desc_;
@@ -75,6 +76,7 @@ class ExecutingBenchmark
         start_time_ = now;
       }
       phase_ = PHASE_EXEC;
+      stoped_due_to_timeout_ = false;
       set_state (now, roah_rsbb_msgs::BenchmarkState_State_PREPARE, desc);
 
       Duration until_timeout = start_time_ + event_.benchmark.timeout - now;
@@ -118,6 +120,7 @@ class ExecutingBenchmark
         return;
       }
 
+      stoped_due_to_timeout_ = true;
       phase_post ("Stopped due to timeout!");
       timeout_timer_.stop();
 
@@ -134,6 +137,7 @@ class ExecutingBenchmark
       , display_log_()
       , display_online_data_()
       , phase_ (PHASE_PRE)
+      , stoped_due_to_timeout_ (false)
       , timeout_timer_ ()
       , manual_operation_ ("")
       , log_ (event.team, event.round, event.run, ss.run_uuid, display_log_)
@@ -736,7 +740,12 @@ class ExecutingExternallyControlledBenchmark
     phase_post_2 (Time const& now)
     {
       if (refbox_state_ != rockin_benchmarking::RefBoxState::RECEIVED_SCORE) {
-        set_refbox_state (rockin_benchmarking::RefBoxState::END);
+        if (stoped_due_to_timeout_) {
+          set_refbox_state (rockin_benchmarking::RefBoxState::END, "reason: timeout");
+        }
+        else {
+          set_refbox_state (rockin_benchmarking::RefBoxState::END, "reason: stop");
+        }
       }
       set_client_state (rockin_benchmarking::ClientState::END);
     }
