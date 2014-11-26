@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PublicDisplay</class>
+ <widget class="QMainWindow" name="PublicDisplay">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>RoCKIn@Home</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">*
+{
+  color: white;
+  background-color: #131313;
+}
+</string>
+  </property>
+  <widget class="QWidget" name="widget">
+   <layout class="QVBoxLayout">
+    <item>
+     <layout class="QHBoxLayout" name="_2">
+      <item>
+       <widget class="QLabel" name="image">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>155</horstretch>
+          <verstretch>155</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../../../../../Dropbox/Linux/ISR/roah_rsbb/src/rqt_roah_rsbb/roah_rsbb.qrc">:/roah.png</pixmap>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../../../../../Dropbox/Linux/ISR/roah_rsbb/src/rqt_roah_rsbb/roah_rsbb.qrc"/>
+ </resources>
+ <connections/>
+</ui>

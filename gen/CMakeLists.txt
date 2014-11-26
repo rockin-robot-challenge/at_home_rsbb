@@ -13,6 +13,9 @@ foreach(header ${ALL_HEADERS})
 endforeach()
 qt4_wrap_cpp(MOC_CPP ${MOC_H})
 
-add_library(roah_rsbb_qt SHARED ${UI_H} ${MOC_CPP})
+file(GLOB_RECURSE RES_QRC ${PROJECT_SOURCE_DIR}/src/*.qrc)
+qt4_add_resources(RES_CPP ${RES_QRC})
+
+add_library(roah_rsbb_qt SHARED ${UI_H} ${MOC_CPP} ${RES_CPP})
 
 set(INCLUDE_DIRS ${INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)

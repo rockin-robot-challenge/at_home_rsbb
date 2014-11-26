@@ -104,10 +104,15 @@ add_executable(core src/core.cpp)
 add_dependencies(core roah_rsbb_generate_messages_cpp)
 target_link_libraries(core ${DISAMBIGUATION}roah_rsbb_msgs ${DISAMBIGUATION}protobuf_comm ${catkin_LIBRARIES} ${YAML_LIBRARIES})
 
+add_executable(public src/public.cpp)
+add_dependencies(public roah_rsbb_generate_messages_cpp)
+target_link_libraries(public rqt_roah_rsbb ${catkin_LIBRARIES})
+
 add_executable(shutdown_service src/shutdown_service.cpp)
 target_link_libraries(shutdown_service ${catkin_LIBRARIES})
 
 add_executable(sounds src/sounds.cpp)
+add_dependencies(sounds roah_rsbb_generate_messages_cpp)
 target_link_libraries(sounds ${catkin_LIBRARIES})
 
 file(GLOB RQT_LIB_SOURCES ${PROJECT_SOURCE_DIR}/src/rqt_roah_rsbb/*.cpp)
