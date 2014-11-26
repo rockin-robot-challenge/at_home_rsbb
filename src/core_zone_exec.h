@@ -481,12 +481,15 @@ class ExecutingExternallyControlledBenchmark
 {
     bool waiting_for_omf_complete_;
     rockin_benchmarking::RefBoxState::_state_type refbox_state_;
+    string annoying_refbox_payload_;
     rockin_benchmarking::ClientState::_state_type client_state_;
+    string annoying_client_payload_;
 
     Publisher client_state_pub_;
     Publisher refbox_state_pub_;
     Subscriber bmbox_state_sub_;
     rockin_benchmarking::BmBoxState::ConstPtr last_bmbox_state_;
+    Timer annoying_timer_;
 
     vector<bool> goal_initial_state_;
     vector<uint32_t> goal_switches_;
@@ -503,6 +506,7 @@ class ExecutingExternallyControlledBenchmark
     {
       if (client_state != client_state_) {
         client_state_ = client_state;
+        annoying_client_payload_ = payload;
         rockin_benchmarking::ClientState msg;
         msg.state = client_state;
         msg.payload = payload;
@@ -517,11 +521,29 @@ class ExecutingExternallyControlledBenchmark
     {
       if (refbox_state != refbox_state_) {
         refbox_state_ = refbox_state;
+        annoying_refbox_payload_ = payload;
         rockin_benchmarking::RefBoxState msg;
         msg.state = refbox_state;
         msg.payload = payload;
         refbox_state_pub_.publish (msg);
         log_.log_uint8 ("/rsbb_log/refbox_state", Time::now(), refbox_state);
+      }
+    }
+
+    void
+    annoying_timer (const TimerEvent& = TimerEvent())
+    {
+      if (client_state_ != rockin_benchmarking::ClientState::START) {
+        rockin_benchmarking::ClientState msg;
+        msg.state = client_state_;
+        msg.payload = annoying_client_payload_;
+        client_state_pub_.publish (msg);
+      }
+      if (refbox_state_ != rockin_benchmarking::RefBoxState::START) {
+        rockin_benchmarking::RefBoxState msg;
+        msg.state = refbox_state_;
+        msg.payload = annoying_refbox_payload_;
+        refbox_state_pub_.publish (msg);
       }
     }
 
@@ -748,6 +770,7 @@ class ExecutingExternallyControlledBenchmark
       , refbox_state_pub_ (ss_.nh.advertise<rockin_benchmarking::RefBoxState> (bmbox_prefix (event) + "refbox_state", 1, true))
       , bmbox_state_sub_ (ss_.nh.subscribe (bmbox_prefix (event) + "bmbox_state", 1, &ExecutingExternallyControlledBenchmark::bmbox_state_callback, this))
       , last_bmbox_state_ (boost::make_shared<rockin_benchmarking::BmBoxState>())
+      , annoying_timer_ (ss_.nh.createTimer (Duration (0.2), &ExecutingExternallyControlledBenchmark::annoying_timer, this))
     {
     }
 
