@@ -20,7 +20,6 @@
 #ifndef __RQT_ROAH_RSBB_OMF_SWITCHES_H__
 #define __RQT_ROAH_RSBB_OMF_SWITCHES_H__
 
-#include <mutex>
 #include <map>
 
 #include <QTimer>

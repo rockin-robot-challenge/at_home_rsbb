@@ -20,8 +20,6 @@
 #ifndef __RQT_ROAH_RSBB_ONLINE_DATA_H__
 #define __RQT_ROAH_RSBB_ONLINE_DATA_H__
 
-#include <mutex>
-
 #include <QTimer>
 
 #include <ros/ros.h>

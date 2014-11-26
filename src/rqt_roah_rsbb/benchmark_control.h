@@ -20,7 +20,6 @@
 #ifndef __RQT_ROAH_RSBB_BENCHMARK_CONTROL_H__
 #define __RQT_ROAH_RSBB_BENCHMARK_CONTROL_H__
 
-#include <mutex>
 #include <set>
 
 #include <QTimer>

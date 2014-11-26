@@ -20,8 +20,6 @@
 #ifndef __RQT_ROAH_RSBB_ACTIVE_ROBOTS_H__
 #define __RQT_ROAH_RSBB_ACTIVE_ROBOTS_H__
 
-#include <mutex>
-
 #include <QTimer>
 
 #include <ros/ros.h>
