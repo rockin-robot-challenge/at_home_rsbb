@@ -21,14 +21,14 @@ add_definitions("-Wall")
 find_package(Boost REQUIRED)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(YAML yaml-cpp>=0.5.0)
-if(YAML_FOUND)
-  include_directories(${YAML_INCLUDE_DIRS})
-  link_directories(${YAML_LIBRARY_DIRS})
+pkg_check_modules(YAML_CPP yaml-cpp>=0.5.0)
+if(YAML_CPP_FOUND)
+  include_directories(${YAML_CPP_INCLUDE_DIRS})
+  link_directories(${YAML_CPP_LIBRARY_DIRS})
 else()
   include_directories("/tmp/yaml-cpp-0.5.1/include")
-  set(YAML_LIBRARIES "/tmp/yaml-cpp-0.5.1/libyaml-cpp.a")
-  if(NOT EXISTS ${YAML_LIBRARIES})
+  set(YAML_CPP_LIBRARIES "/tmp/yaml-cpp-0.5.1/libyaml-cpp.a")
+  if(NOT EXISTS ${YAML_CPP_LIBRARIES})
     message(FATAL_ERROR "yaml-cpp>=0.5.0 not found, please run:
     cd /tmp &&
     wget https://yaml-cpp.googlecode.com/files/yaml-cpp-0.5.1.tar.gz &&
@@ -37,7 +37,7 @@ else()
     cmake . &&
     make -j8 yaml-cpp")
   endif()
-  message(STATUS "  using yaml-cpp from ${YAML_LIBRARIES}")
+  message(STATUS "  using yaml-cpp from ${YAML_CPP_LIBRARIES}")
 endif()
 
 find_package(Qt4 REQUIRED QtCore QtGui)
@@ -102,7 +102,7 @@ include_directories(
 
 add_executable(core src/core.cpp)
 add_dependencies(core roah_rsbb_generate_messages_cpp)
-target_link_libraries(core ${DISAMBIGUATION}roah_rsbb_msgs ${DISAMBIGUATION}protobuf_comm ${catkin_LIBRARIES} ${YAML_LIBRARIES})
+target_link_libraries(core ${DISAMBIGUATION}roah_rsbb_msgs ${DISAMBIGUATION}protobuf_comm ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 add_executable(public src/public.cpp)
 add_dependencies(public roah_rsbb_generate_messages_cpp)
