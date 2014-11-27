@@ -354,6 +354,24 @@ class Zone
 
       return zone;
     }
+
+    void
+    msg (Time const& now,
+         multimap<Time, roah_rsbb::ScheduleInfo>& map)
+    {
+      for (multimap<Time, const Event>::const_iterator i = events_.cbegin();
+           i != events_.cend();
+           ++i) {
+        roah_rsbb::ScheduleInfo msg;
+        msg.team = i->second.team;
+        msg.benchmark = i->second.benchmark.desc;
+        msg.round = i->second.round;
+        msg.run = i->second.run;
+        msg.time = to_string (i->second.scheduled_time);
+        msg.running = ( (i == current_event_) && executing_benchmark_);
+        map.insert (make_pair (i->second.scheduled_time, msg));
+      }
+    }
 };
 
 
@@ -399,6 +417,17 @@ class CoreZoneManager
       for (auto const& i : zones_) {
         if (i.second) {
           msg.push_back (i.second->msg (now));
+        }
+      }
+    }
+
+    void
+    msg (Time const& now,
+         multimap<Time, roah_rsbb::ScheduleInfo>& map)
+    {
+      for (auto const& i : zones_) {
+        if (i.second) {
+          i.second->msg (now, map);
         }
       }
     }

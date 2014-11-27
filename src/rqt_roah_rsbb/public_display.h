@@ -27,13 +27,12 @@
 
 #include <ui_public_display.h>
 #include <roah_rsbb/UInt8.h>
-#include <roah_rsbb/CoreToGui.h>
-#include "topic_receiver.h"
+#include <roah_rsbb/CoreToPublic.h>
 
 
 
 class PublicDisplay
-: public QMainWindow
+  : public QMainWindow
 {
     Q_OBJECT
 
@@ -46,11 +45,13 @@ class PublicDisplay
     Ui::PublicDisplay ui_;
     QTimer update_timer_;
     ros::ServiceServer screen_srv_;
-    TopicReceiver<roah_rsbb::CoreToGui> core_rcv_;
+    ros::Subscriber core_to_public_sub_;
 
-    bool set_screen(roah_rsbb::UInt8::Request& req,
-                    roah_rsbb::UInt8::Response& res);
-    
+    bool set_screen (roah_rsbb::UInt8::Request& req,
+                     roah_rsbb::UInt8::Response& res);
+
+    void core_to_public (roah_rsbb::CoreToPublic::ConstPtr const& msg);
+
   private slots:
     void update();
 };

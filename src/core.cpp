@@ -23,6 +23,7 @@
 #include "core_public_channel.h"
 #include "core_zone_manager.h"
 #include "core_gui.h"
+#include "core_public.h"
 
 
 
@@ -34,6 +35,7 @@ namespace roah_rsbb
       CorePublicChannel public_channel_;
       CoreZoneManager zone_manager_;
       CoreGui gui_;
+      CorePublic public_;
 
       Subscriber devices_sub_;
 
@@ -49,6 +51,7 @@ namespace roah_rsbb
         , public_channel_ (ss_)
         , zone_manager_ (ss_)
         , gui_ (ss_, public_channel_, zone_manager_)
+        , public_ (ss_, zone_manager_)
         , devices_sub_ (ss_.nh.subscribe ("/devices/state", 1, &Core::devices_callback, this))
       {
       }

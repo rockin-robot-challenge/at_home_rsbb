@@ -48,6 +48,7 @@
 #include <roah_devices/DevicesState.h>
 #include <roah_devices/Percentage.h>
 #include <roah_rsbb/CoreToGui.h>
+#include <roah_rsbb/CoreToPublic.h>
 #include <roah_rsbb/RobotInfo.h>
 #include <roah_rsbb/Zone.h>
 #include <roah_rsbb/ZoneState.h>
