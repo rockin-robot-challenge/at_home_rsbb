@@ -129,6 +129,8 @@ class CorePublicChannel
                         << ":" << endpoint.port()
                         << ", COMP_ID " << comp_id
                         << ", MSG_TYPE " << msg_type);
+
+      last_tablet_ = msg;
     }
 
   public:
