@@ -43,11 +43,9 @@ class ExecutingBenchmark
     roah_rsbb_msgs::BenchmarkState::State state_;
     enum { PHASE_PRE, PHASE_EXEC, PHASE_POST } phase_;
     bool stoped_due_to_timeout_;
-    Time start_time_;
+    TimeControl time_;
     Time last_stop_time_;
     string state_desc_;
-
-    Timer timeout_timer_;
 
     string manual_operation_;
 
@@ -73,16 +71,14 @@ class ExecutingBenchmark
       Time now = Time::now();
 
       if (phase_ == PHASE_PRE) {
-        start_time_ = now;
+        time_.start_reset (now);
+      }
+      else {
+        time_.resume_hot (now);
       }
       phase_ = PHASE_EXEC;
       stoped_due_to_timeout_ = false;
       set_state (now, roah_rsbb_msgs::BenchmarkState_State_PREPARE, desc);
-
-      Duration until_timeout = start_time_ + event_.benchmark.timeout - now;
-      if (until_timeout > Duration (0)) {
-        timeout_timer_ = ss_.nh.createTimer (until_timeout, &ExecutingBenchmark::timeout, this, true, true);
-      }
 
       phase_exec_2 (now);
     }
@@ -99,7 +95,7 @@ class ExecutingBenchmark
       last_stop_time_ = now;
       set_state (now, roah_rsbb_msgs::BenchmarkState_State_STOP, desc);
 
-      timeout_timer_.stop();
+      time_.stop_pause (now);
 
       phase_post_2 (now);
     }
@@ -108,21 +104,14 @@ class ExecutingBenchmark
     boost::function<void() > end_;
 
     void
-    timeout (const TimerEvent& timer_event)
+    timeout_2 ()
     {
       if (phase_ != PHASE_EXEC) {
         return;
       }
 
-      Duration until_timeout = start_time_ + event_.benchmark.timeout - timer_event.current_real;
-      if (until_timeout > Duration (0)) {
-        timeout_timer_ = ss_.nh.createTimer (until_timeout, &ExecutingBenchmark::timeout, this, true, true);
-        return;
-      }
-
       stoped_due_to_timeout_ = true;
       phase_post ("Stopped due to timeout!");
-      timeout_timer_.stop();
 
       timeout_pub_.publish (std_msgs::Empty());
     }
@@ -138,7 +127,7 @@ class ExecutingBenchmark
       , display_online_data_()
       , phase_ (PHASE_PRE)
       , stoped_due_to_timeout_ (false)
-      , timeout_timer_ ()
+      , time_ (ss, event_.benchmark.timeout, boost::bind (&ExecutingBenchmark::timeout_2, this))
       , manual_operation_ ("")
       , log_ (event.team, event.round, event.run, ss.run_uuid, display_log_)
       , end_ (end)
@@ -151,13 +140,12 @@ class ExecutingBenchmark
     virtual ~ExecutingBenchmark()
     {
       log_.end();
-      timeout_timer_.stop();
     }
 
     void
     terminate_benchmark()
     {
-      timeout_timer_.stop();
+      time_.stop_pause (Time());
       stop_communication();
       end_();
     }
@@ -228,7 +216,7 @@ class ExecutingBenchmark
           zone.timer = event_.scheduled_time - now;
           break;
         case PHASE_EXEC:
-          zone.timer = start_time_ + event_.benchmark.timeout - now;
+          zone.timer = time_.get_until_timeout (now);
           break;
         case PHASE_POST:
           zone.timer = last_stop_time_ + Duration (param_direct<double> ("~after_stop_duration", 120.0)) - now;
@@ -565,6 +553,9 @@ class ExecutingExternallyControlledBenchmark
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::WAITING_MANUAL_OPERATION) {
               set_refbox_state (rockin_benchmarking::RefBoxState::EXECUTING_MANUAL_OPERATION);
               manual_operation_ = last_bmbox_state_->payload;
+
+              // Stop main timer
+              time_.stop_pause (now);
             }
           }
           if ( ( (refbox_state_ == rockin_benchmarking::RefBoxState::READY)
@@ -573,6 +564,9 @@ class ExecutingExternallyControlledBenchmark
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::TRANSMITTING_GOAL) {
               last_exec_start_ = now;
               exec_duration_ = Duration();
+
+              // Resume main timer
+              time_.resume (now);
 
               YAML::Node node = YAML::Load (last_bmbox_state_->payload);
               goal_initial_state_.clear();
@@ -595,6 +589,9 @@ class ExecutingExternallyControlledBenchmark
             else if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::WAITING_RESULT) {
               last_exec_start_ = now;
               exec_duration_ = Duration();
+
+              // Resume main timer
+              time_.resume (now);
 
               set_state (now, roah_rsbb_msgs::BenchmarkState_State_GOAL_TX, "Robot finished preparation, no goal from BmBox, starting execution");
               set_refbox_state (rockin_benchmarking::RefBoxState::EXECUTING_GOAL);
@@ -662,7 +659,9 @@ class ExecutingExternallyControlledBenchmark
                 exec_duration_ = now - last_exec_start_;
                 if (event_.benchmark_code == "HOMF") {
                   set_state (now, state_, "Robot finished executing. Waiting for switches input from referee.");
-                  timeout_timer_.stop();
+
+                  // Time for the referee to press OMF Complete should be discarded
+                  time_.stop_pause (now);
                 }
               }
 
@@ -827,6 +826,9 @@ class ExecutingExternallyControlledBenchmark
         on_switches_.clear();
         changed_switches_.clear();
         damaged_switches_ = 0;
+
+        // Time for the referee to press OMF Complete should be discarded
+        time_.resume (now);
       }
     }
 

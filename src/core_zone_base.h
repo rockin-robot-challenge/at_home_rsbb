@@ -232,4 +232,115 @@ class ReceiverRepeated
     }
 };
 
+
+
+class TimeControl
+{
+    CoreSharedState& ss_;
+    Duration timeout_;
+
+    Time start_time_;
+
+    Duration delay_acc_;
+    bool paused_;
+    Time pause_start_;
+
+    Timer timeout_timer_;
+    const function<void (void) > timeout_2_;
+
+    void
+    timeout (const TimerEvent& timer_event)
+    {
+      if (paused_) {
+        return;
+      }
+
+      if (start_timer (timer_event.current_real)) {
+        return;
+      }
+
+      timeout_2_();
+    }
+
+    bool
+    start_timer (Time const& now)
+    {
+      Duration until_timeout = get_until_timeout (now);
+      if (until_timeout > Duration ()) {
+        timeout_timer_ = ss_.nh.createTimer (until_timeout, &TimeControl::timeout, this, true, true);
+        return true;
+      }
+      return false;
+    }
+
+  public:
+    TimeControl (CoreSharedState& ss,
+                 Duration timeout,
+                 function<void (void) > const& timeout_2)
+      : ss_ (ss)
+      , timeout_ (timeout)
+      , delay_acc_()
+      , paused_ (false)
+      , timeout_timer_ ()
+      , timeout_2_ (timeout_2)
+    {
+    }
+
+    ~TimeControl()
+    {
+      timeout_timer_.stop();
+    }
+
+    void
+    start_reset (Time const& now)
+    {
+      start_time_ = now;
+      delay_acc_ = Duration();
+      paused_ = false;
+      start_timer (now);
+    }
+
+    void
+    stop_pause (Time const& now)
+    {
+      if (paused_) {
+        return;
+      }
+
+      paused_ = true;
+      pause_start_ = now;
+      timeout_timer_.stop();
+    }
+
+    void
+    resume (Time const& now)
+    {
+      if (! paused_) {
+        return;
+      }
+
+      delay_acc_ += (now - pause_start_);
+      paused_ = false;
+      start_timer (now);
+    }
+
+    void
+    resume_hot (Time const& now)
+    {
+      if (! paused_) {
+        return;
+      }
+
+      // Does not accumulate, stopped time actually counts in resets
+      paused_ = false;
+      start_timer (now);
+    }
+
+    Duration
+    get_until_timeout (Time const& now)
+    {
+      return start_time_ + timeout_ + delay_acc_ - (paused_ ? pause_start_ : now);
+    }
+};
+
 #endif
