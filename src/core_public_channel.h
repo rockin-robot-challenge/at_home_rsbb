@@ -32,8 +32,6 @@ class CorePublicChannel
 {
     CoreSharedState& ss_;
 
-    std::shared_ptr<const roah_rsbb_msgs::TabletBeacon> last_tablet_;
-
     Timer beacon_timer_;
 
     void
@@ -58,11 +56,11 @@ class CorePublicChannel
       msg.set_devices_blinds (static_cast<uint32_t> (ss_.last_devices_state->blinds));
 
       msg.set_tablet_display_map (ss_.tablet_display_map);
-      if (last_tablet_) {
-        (* (msg.mutable_tablet_call_time())) = last_tablet_->last_call();
-        (* (msg.mutable_tablet_position_time())) = last_tablet_->last_pos();
-        msg.set_tablet_position_x (last_tablet_->x());
-        msg.set_tablet_position_y (last_tablet_->y());
+      if (ss_.last_tablet) {
+        (* (msg.mutable_tablet_call_time())) = ss_.last_tablet->last_call();
+        (* (msg.mutable_tablet_position_time())) = ss_.last_tablet->last_pos();
+        msg.set_tablet_position_x (ss_.last_tablet->x());
+        msg.set_tablet_position_y (ss_.last_tablet->y());
       }
       else {
         msg.mutable_tablet_call_time()->set_sec (0);
@@ -130,7 +128,8 @@ class CorePublicChannel
                         << ", COMP_ID " << comp_id
                         << ", MSG_TYPE " << msg_type);
 
-      last_tablet_ = msg;
+      ss_.last_tablet_time = Time::now();
+      ss_.last_tablet = msg;
     }
 
   public:
@@ -138,7 +137,6 @@ class CorePublicChannel
       : roah_rsbb::RosPublicChannel (param_direct<string> ("~rsbb_host", "10.255.255.255"),
                                      param_direct<int> ("~rsbb_port", 6666))
       , ss_ (ss)
-      , last_tablet_ (/*empty*/)
       , beacon_timer_ (ss_.nh.createTimer (Duration (5, 0), &CorePublicChannel::setup_transmit_beacon, this, true))
     {
       set_rsbb_beacon_callback (&CorePublicChannel::receive_rsbb_beacon, this);

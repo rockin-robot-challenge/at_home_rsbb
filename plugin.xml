@@ -105,4 +105,19 @@
     </qtgui>
   </class>
 
+  <class name="rqt_roah_rsbb/TabletStatus" type="rqt_roah_rsbb::TabletStatus" base_class_type="rqt_gui_cpp::Plugin">
+    <description>
+      RoAH RSBB tablet status display.
+    </description>
+    <qtgui>
+      <group>
+        <label>RoAH RSBB</label>
+        <icon type="theme">folder</icon>
+      </group>
+      <label>Tablet Status</label>
+      <icon type="theme">utilities-system-monitor</icon>
+      <statustip>Current status of the tablet</statustip>
+    </qtgui>
+  </class>
+
 </library>

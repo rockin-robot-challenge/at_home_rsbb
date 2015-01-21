@@ -63,6 +63,22 @@ class CoreGui
       msg->port = to_string (public_channel_.port());
       ss_.active_robots.msg (msg->active_robots);
       zone_manager_.msg (now, msg->zones);
+
+      msg->tablet_last_beacon = ss_.last_tablet_time;
+      msg->tablet_display_map = ss_.tablet_display_map;
+      if (ss_.last_tablet) {
+        msg->tablet_call_time = roah_rsbb::proto_to_ros_time (ss_.last_tablet->last_call());
+        msg->tablet_position_time = roah_rsbb::proto_to_ros_time (ss_.last_tablet->last_pos());
+        msg->tablet_position_x = ss_.last_tablet->x();
+        msg->tablet_position_y = ss_.last_tablet->y();
+      }
+      else {
+        msg->tablet_call_time = TIME_MIN;
+        msg->tablet_position_time = TIME_MIN;
+        msg->tablet_position_x = 0;
+        msg->tablet_position_y = 0;
+      }
+
       pub_.publish (msg);
     }
 

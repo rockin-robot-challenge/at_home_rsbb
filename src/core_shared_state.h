@@ -239,6 +239,8 @@ struct CoreSharedState
   map<string, pair<string, uint32_t>> benchmarking_robots;
   bool tablet_display_map;
   roah_devices::DevicesState::ConstPtr last_devices_state;
+  Time last_tablet_time;
+  std::shared_ptr<const roah_rsbb_msgs::TabletBeacon> last_tablet;
 
   unsigned short private_port_;
 
@@ -247,6 +249,8 @@ struct CoreSharedState
     , run_uuid (to_string (boost::uuids::random_generator() ()))
     , tablet_display_map (false)
     , last_devices_state (boost::make_shared<roah_devices::DevicesState>())
+    , last_tablet_time (TIME_MIN)
+    , last_tablet (/*empty*/)
     , private_port_ (param_direct<int> ("~rsbb_port", 6666))
   {
   }
