@@ -228,7 +228,7 @@ class ExecutingBenchmark
       zone.manual_operation = manual_operation_;
 
       zone.start_enabled = state_ == roah_rsbb_msgs::BenchmarkState_State_STOP;
-      zone.stop_enabled = true;
+      zone.stop_enabled = ! zone.start_enabled;
 
       zone.log = display_log_.str();
       zone.online_data = display_online_data_.str();

@@ -14,7 +14,8 @@ string state
 
 string manual_operation
 
-bool prepare_enabled
+bool connect_enabled
+bool disconnect_enabled
 bool start_enabled
 bool stop_enabled
 bool prev_enabled

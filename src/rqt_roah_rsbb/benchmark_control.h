@@ -57,7 +57,8 @@ namespace rqt_roah_rsbb
     private slots:
       void update();
       void zone (QString const& zone);
-      void prepare();
+      void connect_s();
+      void disconnect();
       void start();
       void stop();
       void previous();

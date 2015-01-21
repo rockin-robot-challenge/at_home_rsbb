@@ -42,7 +42,8 @@ class CoreGui
     ServiceServer omf_complete_srv_;
     ServiceServer omf_damaged_srv_;
     ServiceServer omf_button_srv_;
-    ServiceServer prepare_srv_;
+    ServiceServer connect_srv_;
+    ServiceServer disconnect_srv_;
     ServiceServer start_srv_;
     ServiceServer stop_srv_;
     ServiceServer previous_srv_;
@@ -114,14 +115,26 @@ class CoreGui
     }
 
     bool
-    prepare_callback (roah_rsbb::Zone::Request& req,
+    connect_callback (roah_rsbb::Zone::Request& req,
                       roah_rsbb::Zone::Response& res)
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
         return false;
       }
-      zone->prepare();
+      zone->connect();
+      return true;
+    }
+
+    bool
+    disconnect_callback (roah_rsbb::Zone::Request& req,
+                         roah_rsbb::Zone::Response& res)
+    {
+      Zone::Ptr zone = zone_manager_.get (req.zone);
+      if (! zone) {
+        return false;
+      }
+      zone->disconnect();
       return true;
     }
 
@@ -186,7 +199,8 @@ class CoreGui
       , omf_complete_srv_ (ss_.nh.advertiseService ("/core/omf_switches/complete", &CoreGui::omf_complete_callback, this))
       , omf_damaged_srv_ (ss_.nh.advertiseService ("/core/omf_switches/damaged", &CoreGui::omf_damaged_callback, this))
       , omf_button_srv_ (ss_.nh.advertiseService ("/core/omf_switches/button", &CoreGui::omf_button_callback, this))
-      , prepare_srv_ (ss_.nh.advertiseService ("/core/prepare", &CoreGui::prepare_callback, this))
+      , connect_srv_ (ss_.nh.advertiseService ("/core/connect", &CoreGui::connect_callback, this))
+      , disconnect_srv_ (ss_.nh.advertiseService ("/core/disconnect", &CoreGui::disconnect_callback, this))
       , start_srv_ (ss_.nh.advertiseService ("/core/start", &CoreGui::start_callback, this))
       , stop_srv_ (ss_.nh.advertiseService ("/core/stop", &CoreGui::stop_callback, this))
       , previous_srv_ (ss_.nh.advertiseService ("/core/previous", &CoreGui::previous_callback, this))

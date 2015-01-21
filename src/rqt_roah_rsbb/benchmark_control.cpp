@@ -61,7 +61,8 @@ namespace rqt_roah_rsbb
     context.addWidget (widget_);
 
     connect (ui_.zone, SIGNAL (currentIndexChanged (QString const&)), this, SLOT (zone (QString const&)));
-    connect (ui_.prepare, SIGNAL (clicked()), this, SLOT (prepare()));
+    connect (ui_.connect, SIGNAL (clicked()), this, SLOT (connect_s()));
+    connect (ui_.disconnect, SIGNAL (clicked()), this, SLOT (disconnect()));
     connect (ui_.start, SIGNAL (clicked()), this, SLOT (start()));
     connect (ui_.stop, SIGNAL (clicked()), this, SLOT (stop()));
     connect (ui_.previous, SIGNAL (clicked()), this, SLOT (previous()));
@@ -135,7 +136,8 @@ namespace rqt_roah_rsbb
         sb->setValue (sb->maximum());
       }
 
-      ui_.prepare->setEnabled (current_zone->prepare_enabled);
+      ui_.connect->setEnabled (current_zone->connect_enabled);
+      ui_.disconnect->setEnabled (current_zone->disconnect_enabled);
       ui_.start->setEnabled (current_zone->start_enabled);
       ui_.stop->setEnabled (current_zone->stop_enabled);
       ui_.previous->setEnabled (current_zone->prev_enabled);
@@ -154,7 +156,8 @@ namespace rqt_roah_rsbb
       ui_.timer->setText ("00:00");
       ui_.state->setPlainText ("--");
 
-      ui_.prepare->setEnabled (false);
+      ui_.connect->setEnabled (false);
+      ui_.disconnect->setEnabled (false);
       ui_.start->setEnabled (false);
       ui_.stop->setEnabled (false);
       ui_.previous->setEnabled (false);
@@ -168,11 +171,18 @@ namespace rqt_roah_rsbb
     ros::param::set ("current_zone", zone.toStdString());
   }
 
-  void BenchmarkControl::prepare()
+  void BenchmarkControl::connect_s()
   {
     roah_rsbb::Zone z;
     z.request.zone = current_zone_;
-    call_service ("/core/prepare", z);
+    call_service ("/core/connect", z);
+  }
+
+  void BenchmarkControl::disconnect()
+  {
+    roah_rsbb::Zone z;
+    z.request.zone = current_zone_;
+    call_service ("/core/disconnect", z);
   }
 
   void BenchmarkControl::start()

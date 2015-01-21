@@ -118,14 +118,14 @@ class Zone
     }
 
     void
-    prepare()
+    connect()
     {
       if (executing_benchmark_) {
-        ROS_WARN_STREAM ("Zone: " << name() << " PREPARE (already issued)");
+        ROS_WARN_STREAM ("Zone: " << name() << " CONNECT (already issued)");
         return;
       }
 
-      ROS_DEBUG_STREAM ("Zone: " << name() << " PREPARE");
+      ROS_DEBUG_STREAM ("Zone: " << name() << " CONNECT");
 
       if (current_event_->second.benchmark_code == "HSUF") {
         if (current_event_->second.team != "ALL") {
@@ -140,12 +140,12 @@ class Zone
 
       roah_rsbb::RobotInfo ri = ss_.active_robots.get (current_event_->second.team);
       if (ri.team.empty()) {
-        ROS_WARN_STREAM ("Zone: " << name() << " PREPARE ignored because robot not present");
+        ROS_WARN_STREAM ("Zone: " << name() << " CONNECT ignored because robot not present");
         return;
       }
 
       if (ss_.benchmarking_robots.count (current_event_->second.team)) {
-        ROS_ERROR_STREAM ("Zone: " << name() << " PREPARE ignored because robot of team " << current_event_->second.team << " is already executing a benchmark");
+        ROS_ERROR_STREAM ("Zone: " << name() << " CONNECT ignored because robot of team " << current_event_->second.team << " is already executing a benchmark");
         return;
       }
 
@@ -172,6 +172,18 @@ class Zone
         }
       }
       while (! ok);
+    }
+
+    void
+    disconnect()
+    {
+      if (! executing_benchmark_) {
+        ROS_WARN_STREAM ("Zone: " << name() << " DISCONNECT (not executing, ignored)");
+        return;
+      }
+
+      ROS_DEBUG_STREAM ("Zone: " << name() << " DISCONNECT");
+      executing_benchmark_->terminate_benchmark();
     }
 
     void
@@ -294,7 +306,8 @@ class Zone
 
       if (executing_benchmark_) {
         executing_benchmark_->fill (now, zone);
-        zone.prepare_enabled = false;
+        zone.connect_enabled = false;
+        zone.disconnect_enabled = false;
         zone.prev_enabled = false;
         zone.next_enabled = false;
       }
@@ -312,11 +325,11 @@ class Zone
             }
           }
           if (teams_out_of_sync.empty()) {
-            zone.prepare_enabled = true;
+            zone.connect_enabled = true;
             add_to_sting (zone.state) << "Benchmark will start with all active robots";
           }
           else {
-            zone.prepare_enabled = false;
+            zone.connect_enabled = false;
             add_to_sting t (zone.state);
             t << "Robots with clock skew:";
             for (string const& i : teams_out_of_sync) {
@@ -325,27 +338,28 @@ class Zone
           }
         }
         else if (ss_.benchmarking_robots.count (current_event_->second.team)) {
-          zone.prepare_enabled = false;
+          zone.connect_enabled = false;
           add_to_sting (zone.state) << "Robot is already executing another benchmark";
         }
         else {
           roah_rsbb::RobotInfo ri = ss_.active_robots.get (current_event_->second.team);
           if (ri.team.empty()) {
-            zone.prepare_enabled = false;
+            zone.connect_enabled = false;
             add_to_sting (zone.state) << "Robot not detected as active";
           }
           else {
             if ( ( (-allowed_skew) < ri.skew) && (ri.skew < allowed_skew)) {
-              zone.prepare_enabled = true;
+              zone.connect_enabled = true;
               add_to_sting (zone.state) << "Robot ready to accept connection";
             }
             else {
-              zone.prepare_enabled = false;
+              zone.connect_enabled = false;
               add_to_sting (zone.state) << "Clock skew too large: " + boost::lexical_cast<string> (ri.skew);
             }
           }
         }
 
+        zone.disconnect_enabled = false;
         zone.start_enabled = false;
         zone.stop_enabled = false;
         zone.prev_enabled = current_event_ != events_.cbegin();
