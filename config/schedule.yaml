@@ -1,106 +1,83 @@
 # All scheduled_time entries must be in UTC!
 # http://rm.isr.ist.utl.pt/attachments/605/RockIn_2014_competition_schedule.pdf
 
-- zone: Day 1, Task Benchmarks Area
+- zone: Testing TestingTeam
   schedule:
-    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 08:02:30, team: BARC }
-    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 08:17:30, team: homer }
-    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 08:32:30, team: Pumas }
-    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2014-11-28 08:47:30, team: SocRob }
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: TestingTeam }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: TestingTeam }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: TestingTeam }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: TestingTeam }
+    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: TestingTeam }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
-    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 9:47:30, team: Watermelon }
-    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 10:02:30, team: BARC }
-    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 10:17:30, team: homer }
-    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 10:32:30, team: Pumas }
-    - { benchmark: HWV, round: 1, run: 1, scheduled_time: 2014-11-28 10:47:30, team: SocRob }
-
-    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2014-11-28 12:32:30, team: b-it-bots }
-    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2014-11-28 12:47:30, team: BARC }
-    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2014-11-28 13:02:30, team: homer }
-    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2014-11-28 13:17:30, team: Pumas }
-    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2014-11-28 13:32:30, team: SocRob }
-
-    - { benchmark: HGTKMH, round: 1, run: 2, scheduled_time: 2014-11-28 14:02:30, team: BARC }
-    - { benchmark: HGTKMH, round: 1, run: 2, scheduled_time: 2014-11-28 14:17:30, team: homer }
-    - { benchmark: HGTKMH, round: 1, run: 2, scheduled_time: 2014-11-28 14:32:30, team: Pumas }
-    - { benchmark: HGTKMH, round: 1, run: 2, scheduled_time: 2014-11-28 14:47:30, team: SocRob }
-
-    - { benchmark: HWV, round: 1, run: 2, scheduled_time: 2014-11-28 15:47:30, team: Watermelon }
-    - { benchmark: HWV, round: 1, run: 2, scheduled_time: 2014-11-28 16:02:30, team: BARC }
-    - { benchmark: HWV, round: 1, run: 2, scheduled_time: 2014-11-28 16:17:30, team: homer }
-    - { benchmark: HWV, round: 1, run: 2, scheduled_time: 2014-11-28 16:32:30, team: Pumas }
-    - { benchmark: HWV, round: 1, run: 2, scheduled_time: 2014-11-28 16:47:30, team: SocRob }
-
-    - { benchmark: HCFGAC, round: 1, run: 2, scheduled_time: 2014-11-28 17:02:30, team: b-it-bots }
-    - { benchmark: HCFGAC, round: 1, run: 2, scheduled_time: 2014-11-28 17:17:30, team: BARC }
-    - { benchmark: HCFGAC, round: 1, run: 2, scheduled_time: 2014-11-28 17:32:30, team: homer }
-    - { benchmark: HCFGAC, round: 1, run: 2, scheduled_time: 2014-11-28 17:47:30, team: Pumas }
-    - { benchmark: HCFGAC, round: 1, run: 2, scheduled_time: 2014-11-28 18:02:30, team: SocRob }
-
-
-- zone: Day 1, Functionality Benchmarks Area
+- zone: Testing b-it-bots
   schedule:
-    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 08:32:30, team: Ursus }
-    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 09:02:30, team: homer }
-    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 09:32:30, team: Pumas }
-    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 10:02:30, team: SocRob }
-    - { benchmark: HOPF, round: 1, run: 1, scheduled_time: 2014-11-28 10:32:30, team: Watermelon }
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: b-it-bots }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: b-it-bots }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: b-it-bots }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: b-it-bots }
+    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: b-it-bots }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
-    - { benchmark: HOMF, round: 1, run: 1, scheduled_time: 2014-11-28 15:02:30, team: homer }
-    - { benchmark: HOMF, round: 1, run: 1, scheduled_time: 2014-11-28 15:32:30, team: Pumas }
-    - { benchmark: HOMF, round: 1, run: 1, scheduled_time: 2014-11-28 15:02:30, team: b-it-bots }
-    - { benchmark: HOMF, round: 1, run: 1, scheduled_time: 2014-11-28 15:32:30, team: Watermelon }
-
-    - { benchmark: HSUF, round: 1, run: 1, scheduled_time: 2014-11-28 18:32:30, team: ALL }
-
-- zone: Day 2, Task Benchmarks Area
+- zone: Testing BARC
   schedule:
-    - { benchmark: HGTKMH, round: 2, run: 1, scheduled_time: 2014-11-29 08:02:30, team: BARC }
-    - { benchmark: HGTKMH, round: 2, run: 1, scheduled_time: 2014-11-29 08:17:30, team: homer }
-    - { benchmark: HGTKMH, round: 2, run: 1, scheduled_time: 2014-11-29 08:32:30, team: Pumas }
-    - { benchmark: HGTKMH, round: 2, run: 1, scheduled_time: 2014-11-29 08:47:30, team: SocRob }
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: BARC }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: BARC }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: BARC }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: BARC }
+    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: BARC }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
-    - { benchmark: HWV, round: 2, run: 1, scheduled_time: 2014-11-29 9:47:30, team: Watermelon }
-    - { benchmark: HWV, round: 2, run: 1, scheduled_time: 2014-11-29 10:02:30, team: BARC }
-    - { benchmark: HWV, round: 2, run: 1, scheduled_time: 2014-11-29 10:17:30, team: homer }
-    - { benchmark: HWV, round: 2, run: 1, scheduled_time: 2014-11-29 10:32:30, team: Pumas }
-    - { benchmark: HWV, round: 2, run: 1, scheduled_time: 2014-11-29 10:47:30, team: SocRob }
-
-    - { benchmark: HCFGAC, round: 2, run: 1, scheduled_time: 2014-11-29 12:32:30, team: b-it-bots }
-    - { benchmark: HCFGAC, round: 2, run: 1, scheduled_time: 2014-11-29 12:47:30, team: BARC }
-    - { benchmark: HCFGAC, round: 2, run: 1, scheduled_time: 2014-11-29 13:02:30, team: homer }
-    - { benchmark: HCFGAC, round: 2, run: 1, scheduled_time: 2014-11-29 13:17:30, team: Pumas }
-    - { benchmark: HCFGAC, round: 2, run: 1, scheduled_time: 2014-11-29 13:32:30, team: SocRob }
-
-    - { benchmark: HGTKMH, round: 2, run: 2, scheduled_time: 2014-11-29 14:02:30, team: BARC }
-    - { benchmark: HGTKMH, round: 2, run: 2, scheduled_time: 2014-11-29 14:17:30, team: homer }
-    - { benchmark: HGTKMH, round: 2, run: 2, scheduled_time: 2014-11-29 14:32:30, team: Pumas }
-    - { benchmark: HGTKMH, round: 2, run: 2, scheduled_time: 2014-11-29 14:47:30, team: SocRob }
-
-    - { benchmark: HWV, round: 2, run: 2, scheduled_time: 2014-11-29 15:47:30, team: Watermelon }
-    - { benchmark: HWV, round: 2, run: 2, scheduled_time: 2014-11-29 16:02:30, team: BARC }
-    - { benchmark: HWV, round: 2, run: 2, scheduled_time: 2014-11-29 16:17:30, team: homer }
-    - { benchmark: HWV, round: 2, run: 2, scheduled_time: 2014-11-29 16:32:30, team: Pumas }
-    - { benchmark: HWV, round: 2, run: 2, scheduled_time: 2014-11-29 16:47:30, team: SocRob }
-
-    - { benchmark: HCFGAC, round: 2, run: 2, scheduled_time: 2014-11-29 17:02:30, team: b-it-bots }
-    - { benchmark: HCFGAC, round: 2, run: 2, scheduled_time: 2014-11-29 17:17:30, team: BARC }
-    - { benchmark: HCFGAC, round: 2, run: 2, scheduled_time: 2014-11-29 17:32:30, team: homer }
-    - { benchmark: HCFGAC, round: 2, run: 2, scheduled_time: 2014-11-29 17:47:30, team: Pumas }
-    - { benchmark: HCFGAC, round: 2, run: 2, scheduled_time: 2014-11-29 18:02:30, team: SocRob }
-
-- zone: Day 2, Functionality Benchmarks Area
+- zone: Testing Donaxi
   schedule:
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: Donaxi }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: Donaxi }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: Donaxi }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: Donaxi }
+    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Donaxi }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
-    - { benchmark: HOMF, round: 2, run: 1, scheduled_time: 2014-11-29 09:02:30, team: homer }
-    - { benchmark: HOMF, round: 2, run: 1, scheduled_time: 2014-11-29 09:32:30, team: Pumas }
-    - { benchmark: HOMF, round: 2, run: 1, scheduled_time: 2014-11-29 10:02:30, team: b-it-bots }
-    - { benchmark: HOMF, round: 2, run: 1, scheduled_time: 2014-11-29 10:32:30, team: Watermelon }
+- zone: Testing homer
+  schedule:
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: homer }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: homer }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: homer }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: homer }
+    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: homer }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
-    - { benchmark: HOPF, round: 2, run: 1, scheduled_time: 2014-11-29 14:32:30, team: Ursus }
-    - { benchmark: HOPF, round: 2, run: 1, scheduled_time: 2014-11-29 15:02:30, team: homer }
-    - { benchmark: HOPF, round: 2, run: 1, scheduled_time: 2014-11-29 15:32:30, team: Pumas }
-    - { benchmark: HOPF, round: 2, run: 1, scheduled_time: 2014-11-29 16:02:30, team: SocRob }
-    - { benchmark: HOPF, round: 2, run: 1, scheduled_time: 2014-11-29 16:32:30, team: Watermelon }
+- zone: Testing Pumas
+  schedule:
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: Pumas }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: Pumas }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: Pumas }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: Pumas }
+    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Pumas }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
-    - { benchmark: HSUF, round: 2, run: 1, scheduled_time: 2014-11-29 18:32:30, team: ALL }
+- zone: Testing SocRob
+  schedule:
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: SocRob }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: SocRob }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: SocRob }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: SocRob }
+    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: SocRob }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
+
+- zone: Testing Ursus
+  schedule:
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: Ursus }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: Ursus }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: Ursus }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: Ursus }
+    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Ursus }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
+
+- zone: Testing Watermelon
+  schedule:
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: Watermelon }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: Watermelon }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: Watermelon }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: Watermelon }
+    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Watermelon }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
