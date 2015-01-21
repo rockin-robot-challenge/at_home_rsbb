@@ -312,7 +312,7 @@ class Zone
         zone.next_enabled = false;
       }
       else {
-        zone.timer = current_event_->second.scheduled_time - Time::now();
+        zone.timer = current_event_->second.benchmark.timeout;
         zone.state = "";
         zone.manual_operation = "";
 

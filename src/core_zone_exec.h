@@ -213,7 +213,7 @@ class ExecutingBenchmark
     {
       switch (phase_) {
         case PHASE_PRE:
-          zone.timer = event_.scheduled_time - now;
+          zone.timer = event_.benchmark.timeout;
           break;
         case PHASE_EXEC:
           zone.timer = time_.get_until_timeout (now);
