@@ -82,6 +82,8 @@ the `openssh-server` package:
 sudo apt-get install openssh-server
 ```
 
+Make sure the `ROS_IP` variable is set correctly.
+
 
 #### Connecting from remote computers
 
@@ -94,6 +96,8 @@ ssh -L 127.0.0.1:11311:10.0.0.1:11311 rockin@10.0.0.1
 
 In this example, the user is named `rockin` and the server is at
 `10.0.0.1`. The `127.0.0.1` at the beginning is mandatory.
+
+Make sure the `ROS_IP` variable is set correctly.
 
 Then, just run the client as if the ROS master were local:
 ```bash
