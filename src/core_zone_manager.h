@@ -306,8 +306,9 @@ class Zone
 
       if (executing_benchmark_) {
         executing_benchmark_->fill (now, zone);
+
         zone.connect_enabled = false;
-        zone.disconnect_enabled = false;
+        zone.disconnect_enabled = true;
         zone.prev_enabled = false;
         zone.next_enabled = false;
       }
@@ -315,6 +316,9 @@ class Zone
         zone.timer = current_event_->second.benchmark.timeout;
         zone.state = "";
         zone.manual_operation = "";
+
+        zone.start_enabled = false;
+        zone.stop_enabled = false;
 
         Duration allowed_skew = Duration (param_direct<double> ("~allowed_skew", 0.1));
         if (current_event_->second.benchmark.code == "HSUF") {
@@ -360,8 +364,6 @@ class Zone
         }
 
         zone.disconnect_enabled = false;
-        zone.start_enabled = false;
-        zone.stop_enabled = false;
         zone.prev_enabled = current_event_ != events_.cbegin();
         zone.next_enabled = current_event_ != prev (events_.cend());
       }
