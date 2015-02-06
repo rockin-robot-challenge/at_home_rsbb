@@ -230,8 +230,9 @@ class ExecutingBenchmark
       zone.start_enabled = state_ == roah_rsbb_msgs::BenchmarkState_State_STOP;
       zone.stop_enabled = ! zone.start_enabled;
 
-      zone.log = display_log_.str();
-      zone.online_data = display_online_data_.str();
+      const size_t log_size = 1000;
+      zone.log = display_log_.last (log_size);
+      zone.online_data = display_online_data_.last (log_size);
 
       fill_2 (now, zone);
     }

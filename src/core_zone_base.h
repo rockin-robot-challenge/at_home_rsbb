@@ -87,6 +87,16 @@ class DisplayText
     {
       return text_.str();
     }
+
+    string
+    last (size_t length = 1)
+    {
+      string ret = text_.str();
+      if (length >= ret.size()) {
+        return ret;
+      }
+      return ret.substr (ret.size() - length);
+    }
 };
 
 
