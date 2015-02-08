@@ -105,6 +105,21 @@
     </qtgui>
   </class>
 
+  <class name="rqt_roah_rsbb/Scoring" type="rqt_roah_rsbb::Scoring" base_class_type="rqt_gui_cpp::Plugin">
+    <description>
+      RoAH RSBB referee scoring list.
+    </description>
+    <qtgui>
+      <group>
+        <label>RoAH RSBB</label>
+        <icon type="theme">folder</icon>
+      </group>
+      <label>Scoring</label>
+      <icon type="theme">edit-copy</icon>
+      <statustip>List scoring items to be marked by the referee</statustip>
+    </qtgui>
+  </class>
+
   <class name="rqt_roah_rsbb/TabletStatus" type="rqt_roah_rsbb::TabletStatus" base_class_type="rqt_gui_cpp::Plugin">
     <description>
       RoAH RSBB tablet status display.

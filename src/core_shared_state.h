@@ -132,11 +132,54 @@ class ActiveRobots
 
 
 
+struct ScoringItem {
+  typedef enum { SCORING_BOOL, SCORING_UINT } scoring_type_t;
+
+  string group;
+  string desc;
+  scoring_type_t type;
+  int32_t current_value;
+
+  ScoringItem (string const& benchmark,
+               string const& group_name,
+               YAML::Node const& item_node)
+    : group (group_name)
+    , current_value (0)
+  {
+    using namespace YAML;
+
+    if (! item_node["type"]) {
+      ROS_FATAL_STREAM ("Benchmark \"" << benchmark << "\" scoring item in \"" << group_name << "\" is missing a \"type\" entry! :\n" << item_node);
+      abort_rsbb();
+    }
+    string type_s = item_node["type"].as<string>();
+    if (type_s == "bool") {
+      type = SCORING_BOOL;
+    }
+    else if (type_s == "uint") {
+      type = SCORING_UINT;
+    }
+    else {
+      ROS_FATAL_STREAM ("Benchmark \"" << benchmark << "\" scoring item in \"" << group_name << "\" type is unknown:" << type_s);
+      abort_rsbb();
+    }
+
+    if (! item_node["desc"]) {
+      ROS_FATAL_STREAM ("Benchmark \"" << benchmark << "\" scoring item in \"" << group_name << "\" is missing a \"desc\" entry! :\n" << item_node);
+      abort_rsbb();
+    }
+    desc = item_node["desc"].as<string>();
+  }
+};
+
+
+
 struct Benchmark {
   string name;
   string desc;
   string code;
   Duration timeout;
+  vector<ScoringItem> scoring;
 };
 
 
@@ -156,6 +199,10 @@ class Benchmarks
         abort_rsbb();
       }
       for (Node const& benchmark_node : file) {
+        if (! benchmark_node.IsMap()) {
+          ROS_FATAL_STREAM ("Benchmarks file has a benchmark entry that is not a map!");
+          abort_rsbb();
+        }
         if (! benchmark_node["name"]) {
           ROS_FATAL_STREAM ("Benchmarks file is missing a \"node\" entry!");
           abort_rsbb();
@@ -177,6 +224,29 @@ class Benchmarks
         b.desc = benchmark_node["desc"].as<string>();
         b.code = benchmark_node["code"].as<string>();
         b.timeout = Duration (benchmark_node["timeout"].as<double>());
+
+        if (benchmark_node["scoring"]) {
+          if (! benchmark_node["scoring"].IsSequence()) {
+            ROS_FATAL_STREAM ("Benchmark \"" << b.name << "\" \"scoring\" entry is not a sequence! :\n" << benchmark_node["scoring"]);
+            abort_rsbb();
+          }
+          for (Node const& scoring_node : benchmark_node["scoring"]) {
+            if (! scoring_node.IsMap()) {
+              ROS_FATAL_STREAM ("Benchmark \"" << b.name << "\" \"scoring\" entry is not a sequence of maps! :\n" << scoring_node);
+              abort_rsbb();
+            }
+            for (YAML::const_iterator it = scoring_node.begin(); it != scoring_node.end(); ++it) {
+              string group_name = it->first.as<string>();
+              if (! it->second.IsSequence()) {
+                ROS_FATAL_STREAM ("Benchmark \"" << b.name << "\" scoring \"" << it->first << "\" is not a sequence! :\n" << it->second);
+                abort_rsbb();
+              }
+              for (Node const& item_node : it->second) {
+                b.scoring.push_back (ScoringItem (b.name, group_name, item_node));
+              }
+            }
+          }
+        }
         by_code_[b.code] = b;
       }
     }

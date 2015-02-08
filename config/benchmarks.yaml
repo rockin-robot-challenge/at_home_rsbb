@@ -2,14 +2,62 @@
   desc: Getting to know my home
   code: HGTKMH
   timeout: 600.000
+  scoring:
+    - Achievements:
+      - { type: bool, desc: "The robot detects the door with changed state." }
+      - { type: uint, desc: "The robot detects each piece of moved furniture." }
+      - { type: uint, desc: "The robot detects each changed object." }
+      - { type: bool, desc: "The robot correctly executes the command given in Phase 2." }
+    - Penalized Behaviors:
+      - { type: uint, desc: "The robot requires multiple repetitions of human gesture/speech." }
+      - { type: uint, desc: "The robot bumps into the furniture." }
+      - { type: uint, desc: "The robot stops working." }
+    - Disqualifying Behaviors:
+      - { type: uint, desc: "The robot hits Annie or another person in the environment." }
+      - { type: uint, desc: "The robot damages the test bed." }
 - name: RoCKIn@Home Task Benchmark 2
   desc: Welcoming visitors
   code: HWV
   timeout: 600.000
+  scoring:
+    - Achievements:
+      - { type: bool, desc: "The robot reaches the door when the door bell is rung by Dr. Kimble and correctly identifies him." }
+      - { type: bool, desc: "The robot reaches the door when the door bell is rung by the Deli Man and correctly identifies him." }
+      - { type: bool, desc: "The robot reaches the door when the door bell is rung by the PostMan and correctly identifies him." }
+      - { type: bool, desc: "The robot reaches the door when the door bell is rung by an unknown person and correctly identifies the person as such." }
+      - { type: bool, desc: "The robot exhibits the expected behavior for interacting with Dr. Kimble." }
+      - { type: bool, desc: "The robot exhibits the expected behavior for interacting with the Deli Man." }
+      - { type: bool, desc: "The robot exhibits the expected behavior for interacting with the PostMan." }
+      - { type: bool, desc: "The robot exhibits the expected behavior for interacting with an unknown person." }
+    - Penalized Behaviors:
+      - { type: uint, desc: "The robot fails in making the visitor respect the proper rights." }
+      - { type: uint, desc: "The robot generates false alarms." }
+      - { type: uint, desc: "The robot fails in maintaining the original state of the environment." }
+      - { type: uint, desc: "The robot requires extra repetitions of speech." }
+      - { type: uint, desc: "The robot bumps into the furniture." }
+      - { type: uint, desc: "The robot stops working." }
+    - Disqualifying Behaviors:
+      - { type: uint, desc: "The robot hits Annie or one of the visitors." }
+      - { type: uint, desc: "The robot damages the test bed. " }
 - name: RoCKIn@Home Task Benchmark 3
   desc: Catering for Granny Annie's Comfort
   code: HCFGAC
   timeout: 600.000
+  scoring:
+    - Achievements:
+      - { type: bool, desc: "The robot enters the room where Granny Annie is waiting." }
+      - { type: bool, desc: "The robot understands Annie’s command(s)." }
+      - { type: uint, desc: "The robot operates correctly the right device(s)." }
+      - { type: uint, desc: "The robot finds the right object(s)." }
+      - { type: uint, desc: "The robot brings to Annie the right object(s)." }
+    - Penalized Behaviors:
+      - { type: uint, desc: "The robot bumps into the furniture." }
+      - { type: uint, desc: "The robot drops an object." }
+      - { type: uint, desc: "The robot stops working." }
+    - Disqualifying Behaviors:
+      - { type: uint, desc: "The robot hits Annie or another person in the environment." }
+      - { type: uint, desc: "The robot damages or destroys the objects requested to manipulate." }
+      - { type: uint, desc: "The robot damages the test bed." }
 - name: RoCKIn@Home Functionality Benchmark 1
   desc: Object Perception Functionality
   code: HOPF

@@ -53,6 +53,7 @@
 #include <roah_rsbb/Zone.h>
 #include <roah_rsbb/ZoneState.h>
 #include <roah_rsbb/ZoneUInt8.h>
+#include <roah_rsbb/ZoneScore.h>
 
 #include <roah_utils.h>
 #include <ros_roah_rsbb.h>

@@ -166,6 +166,16 @@ class RsbbLog
     }
 
     void
+    log_score (string const& topic,
+               Time const& time,
+               roah_rsbb::Score const& msg)
+    {
+      bag_.write (topic, time, msg);
+
+      display_text_.add (time, topic + "\n" + msg.group + ", " + msg.desc + " -> " + to_string (msg.value));
+    }
+
+    void
     set_state (Time const& now,
                roah_rsbb_msgs::BenchmarkState::State const& state,
                string const& desc)

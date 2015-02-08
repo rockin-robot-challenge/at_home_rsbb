@@ -28,3 +28,5 @@ bool omf_complete
 
 string log
 string online_data
+
+ZoneScoreGroup[] scoring

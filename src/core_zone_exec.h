@@ -51,6 +51,8 @@ class ExecutingBenchmark
 
     RsbbLog log_;
 
+    vector<ScoringItem> scoring_;
+
     void
     set_state (Time const& now,
                roah_rsbb_msgs::BenchmarkState::State const& state,
@@ -130,6 +132,7 @@ class ExecutingBenchmark
       , time_ (ss, event_.benchmark.timeout, boost::bind (&ExecutingBenchmark::timeout_2, this))
       , manual_operation_ ("")
       , log_ (event.team, event.round, event.run, ss.run_uuid, display_log_)
+      , scoring_ (event.benchmark.scoring)
       , end_ (end)
     {
       Time now = Time::now();
@@ -148,6 +151,21 @@ class ExecutingBenchmark
       time_.stop_pause (Time());
       stop_communication();
       end_();
+    }
+
+    void
+    set_score (roah_rsbb::Score const& score)
+    {
+      Time now = Time::now();
+
+      for (ScoringItem& i : scoring_) {
+        if ( (score.group == i.group) && (score.desc == i.desc)) {
+          i.current_value = score.value;
+          log_.log_score ("/rsbb_log/score", now, score);
+          return;
+        }
+      }
+      ROS_ERROR_STREAM ("Did not find group " << score.group << " desc " << score.desc);
     }
 
     virtual void
@@ -233,6 +251,26 @@ class ExecutingBenchmark
       const size_t log_size = 1000;
       zone.log = display_log_.last (log_size);
       zone.online_data = display_online_data_.last (log_size);
+
+      for (ScoringItem const& i : scoring_) {
+        if (zone.scoring.empty() || (zone.scoring.back().group_name != i.group)) {
+          zone.scoring.push_back (roah_rsbb::ZoneScoreGroup());
+          zone.scoring.back().group_name = i.group;
+        }
+        switch (i.type) {
+          case ScoringItem::SCORING_BOOL:
+            zone.scoring.back().types.push_back (roah_rsbb::ZoneScoreGroup::SCORING_BOOL);
+            break;
+          case ScoringItem::SCORING_UINT:
+            zone.scoring.back().types.push_back (roah_rsbb::ZoneScoreGroup::SCORING_UINT);
+            break;
+          default:
+            ROS_FATAL_STREAM ("type in ScoringItem error");
+            abort_rsbb();
+        }
+        zone.scoring.back().descriptions.push_back (i.desc);
+        zone.scoring.back().current_values.push_back (i.current_value);
+      }
 
       fill_2 (now, zone);
     }

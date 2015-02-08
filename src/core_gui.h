@@ -38,6 +38,7 @@ class CoreGui
     Publisher pub_;
     Timer pub_timer_;
 
+    ServiceServer set_score_srv_;
     ServiceServer manual_operation_complete_srv_;
     ServiceServer omf_complete_srv_;
     ServiceServer omf_damaged_srv_;
@@ -83,11 +84,25 @@ class CoreGui
     }
 
     bool
+    set_score_callback (roah_rsbb::ZoneScore::Request& req,
+                        roah_rsbb::ZoneScore::Response& res)
+    {
+      Zone::Ptr zone = zone_manager_.get (req.zone);
+      if (! zone) {
+        ROS_WARN_STREAM ("set_score_callback: Could not find zone: " << req.zone);
+        return false;
+      }
+      zone->set_score (req.score);
+      return true;
+    }
+
+    bool
     manual_operation_complete_callback (roah_rsbb::Zone::Request& req,
                                         roah_rsbb::Zone::Response& res)
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
+        ROS_WARN_STREAM ("manual_operation_complete_callback: Could not find zone: " << req.zone);
         return false;
       }
       zone->manual_operation_complete();
@@ -100,6 +115,7 @@ class CoreGui
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
+        ROS_WARN_STREAM ("omf_complete_callback: Could not find zone: " << req.zone);
         return false;
       }
       zone->omf_complete();
@@ -112,6 +128,7 @@ class CoreGui
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
+        ROS_WARN_STREAM ("omf_damaged_callback: Could not find zone: " << req.zone);
         return false;
       }
       zone->omf_damaged (req.data);
@@ -124,6 +141,7 @@ class CoreGui
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
+        ROS_WARN_STREAM ("omf_button_callback: Could not find zone: " << req.zone);
         return false;
       }
       zone->omf_button (req.data);
@@ -136,6 +154,7 @@ class CoreGui
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
+        ROS_WARN_STREAM ("connect_callback: Could not find zone: " << req.zone);
         return false;
       }
       zone->connect();
@@ -148,6 +167,7 @@ class CoreGui
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
+        ROS_WARN_STREAM ("disconnect_callback: Could not find zone: " << req.zone);
         return false;
       }
       zone->disconnect();
@@ -160,6 +180,7 @@ class CoreGui
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
+        ROS_WARN_STREAM ("start_callback: Could not find zone: " << req.zone);
         return false;
       }
       zone->start();
@@ -172,6 +193,7 @@ class CoreGui
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
+        ROS_WARN_STREAM ("stop_callback: Could not find zone: " << req.zone);
         return false;
       }
       zone->stop();
@@ -184,6 +206,7 @@ class CoreGui
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
+        ROS_WARN_STREAM ("previous_callback: Could not find zone: " << req.zone);
         return false;
       }
       zone->previous();
@@ -196,6 +219,7 @@ class CoreGui
     {
       Zone::Ptr zone = zone_manager_.get (req.zone);
       if (! zone) {
+        ROS_WARN_STREAM ("next_callback: Could not find zone: " << req.zone);
         return false;
       }
       zone->next();
@@ -211,6 +235,7 @@ class CoreGui
       , zone_manager_ (zone_manager)
       , pub_ (ss_.nh.advertise<roah_rsbb::CoreToGui> ("/core/to_gui", 1, true))
       , pub_timer_ (ss_.nh.createTimer (Duration (0.1), &CoreGui::transmit, this))
+      , set_score_srv_ (ss_.nh.advertiseService ("/core/set_score", &CoreGui::set_score_callback, this))
       , manual_operation_complete_srv_ (ss_.nh.advertiseService ("/core/manual_operation_complete", &CoreGui::manual_operation_complete_callback, this))
       , omf_complete_srv_ (ss_.nh.advertiseService ("/core/omf_switches/complete", &CoreGui::omf_complete_callback, this))
       , omf_damaged_srv_ (ss_.nh.advertiseService ("/core/omf_switches/damaged", &CoreGui::omf_damaged_callback, this))

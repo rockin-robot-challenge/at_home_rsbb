@@ -187,6 +187,18 @@ class Zone
     }
 
     void
+    set_score (roah_rsbb::Score const& score)
+    {
+      if (! executing_benchmark_) {
+        ROS_WARN_STREAM ("Zone: " << name() << " SET_SCORE (not executing, ignored)");
+        return;
+      }
+
+      ROS_DEBUG_STREAM ("Zone: " << name() << " SET_SCORE");
+      executing_benchmark_->set_score (score);
+    }
+
+    void
     manual_operation_complete()
     {
       if (! executing_benchmark_) {
