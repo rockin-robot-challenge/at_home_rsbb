@@ -430,9 +430,9 @@ class ExecutingSimpleBenchmark
           switch (msg.robot_state()) {
             case roah_rsbb_msgs::RobotState_State_STOP:
             case roah_rsbb_msgs::RobotState_State_PREPARING:
-            case roah_rsbb_msgs::RobotState_State_WAITING_GOAL:
               phase_exec ("Received wrong state from robot, retrying from prepare");
               break;
+            case roah_rsbb_msgs::RobotState_State_WAITING_GOAL:
             case roah_rsbb_msgs::RobotState_State_EXECUTING:
               // Keep
               break;
