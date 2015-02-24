@@ -46,6 +46,7 @@ class ExecutingBenchmark
     TimeControl time_;
     Time last_stop_time_;
     string state_desc_;
+    Time state_time_;
 
     string manual_operation_;
 
@@ -60,6 +61,7 @@ class ExecutingBenchmark
     {
       state_ = state;
       state_desc_ = desc;
+      state_time_ = now;
 
       log_.set_state (now, state, desc);
     }
@@ -360,6 +362,13 @@ class ExecutingSingleRobotBenchmark
       ss_.active_robots.add (event_.team, robot_name_, last_skew_, last_beacon_);
 
       messages_saved_ = msg->messages_saved();
+      if ( (messages_saved_ == 0)
+           && (param_direct<bool> ("~check_messages_saved", true))
+           && ( (state_ == roah_rsbb_msgs::BenchmarkState_State_GOAL_TX)
+                || (state_ == roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT))
+           && ( (last_beacon_ - state_time_).toSec() > param_direct<double> ("~check_messages_saved_timeout", 5.0))) {
+        phase_post ("STOPPED BENCHMARK: Messages saved information received from robot is still 0!");
+      }
 
       ack_ = msg->time();
 
