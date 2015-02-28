@@ -69,8 +69,8 @@ namespace rqt_roah_rsbb
 
     default_palette_ = ui_.mo->palette();
     warn_palette_ = ui_.mo->palette();
-    warn_palette_.setColor (QPalette::Active, QPalette::Base, Qt::yellow);
-    warn_palette_.setColor (QPalette::Inactive, QPalette::Base, Qt::yellow);
+    warn_palette_.setColor (QPalette::All, QPalette::Base, Qt::yellow);
+    warn_palette_.setColor (QPalette::All, QPalette::Text, Qt::black);
   }
 
   void ManualOperation::shutdownPlugin()
