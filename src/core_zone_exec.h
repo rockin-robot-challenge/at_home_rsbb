@@ -540,6 +540,8 @@ class ExecutingExternallyControlledBenchmark
     vector<uint32_t> changed_switches_;
     uint32_t damaged_switches_;
 
+    Duration total_timeout_;
+
     void
     set_client_state (rockin_benchmarking::ClientState::_state_type client_state,
                       string const& payload = "")
@@ -781,6 +783,12 @@ class ExecutingExternallyControlledBenchmark
       on_switches_.clear();
       changed_switches_.clear();
       damaged_switches_ = 0;
+
+      // OPF: Timeout should also happen for each object.
+      // Therefore, timeout refers to each object and a total_timeout
+      // is added for the whole benchmark.
+      total_timeout_ -= time_.get_elapsed (now);
+      time_.start_reset (now, min (event_.benchmark.timeout, total_timeout_));
     }
 
     void
@@ -827,6 +835,7 @@ class ExecutingExternallyControlledBenchmark
       , bmbox_state_sub_ (ss_.nh.subscribe (bmbox_prefix (event) + "bmbox_state", 1, &ExecutingExternallyControlledBenchmark::bmbox_state_callback, this))
       , last_bmbox_state_ (boost::make_shared<rockin_benchmarking::BmBoxState>())
       , annoying_timer_ (ss_.nh.createTimer (Duration (0.2), &ExecutingExternallyControlledBenchmark::annoying_timer, this))
+      , total_timeout_ (event.benchmark.total_timeout)
     {
     }
 
@@ -905,6 +914,10 @@ class ExecutingExternallyControlledBenchmark
             roah_rsbb::ZoneState& zone)
     {
       add_to_sting (zone.state) << "Messages saved: " << messages_saved_;
+      if (phase_ == PHASE_EXEC) {
+        // add_to_sting (zone.state) << "total_timeout_: " << to_string(total_timeout_.toSec());
+        add_to_sting (zone.state) << "Benchmark timeout: " << to_qstring (time_.get_until_timeout_for_timeout (now, total_timeout_)).toStdString();
+      }
 
       if (bmbox_state_sub_.getNumPublishers() == 0) {
         add_to_sting (zone.state) << "NOT CONNECTED TO BmBox!!!";

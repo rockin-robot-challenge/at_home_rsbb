@@ -62,6 +62,7 @@
   desc: Object Perception Functionality
   code: HOPF
   timeout: 120.000
+  total_timeout: 600.000
 - name: RoCKIn@Home Functionality Benchmark 2
   desc: Object Manipulation Functionality
   code: HOMF

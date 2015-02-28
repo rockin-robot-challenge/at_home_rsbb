@@ -179,6 +179,7 @@ struct Benchmark {
   string desc;
   string code;
   Duration timeout;
+  Duration total_timeout;
   vector<ScoringItem> scoring;
 };
 
@@ -224,6 +225,12 @@ class Benchmarks
         b.desc = benchmark_node["desc"].as<string>();
         b.code = benchmark_node["code"].as<string>();
         b.timeout = Duration (benchmark_node["timeout"].as<double>());
+        if (benchmark_node["total_timeout"]) {
+          b.total_timeout = Duration (benchmark_node["total_timeout"].as<double>());
+        }
+        else {
+          b.total_timeout = b.timeout;
+        }
 
         if (benchmark_node["scoring"]) {
           if (! benchmark_node["scoring"].IsSequence()) {

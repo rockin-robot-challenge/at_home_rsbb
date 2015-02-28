@@ -286,6 +286,7 @@ class TimeControl
     start_timer (Time const& now)
     {
       Duration until_timeout = get_until_timeout (now);
+      timeout_timer_.stop();
       if (until_timeout > Duration ()) {
         timeout_timer_ = ss_.nh.createTimer (until_timeout, &TimeControl::timeout, this, true, true);
         return true;
@@ -318,6 +319,14 @@ class TimeControl
       delay_acc_ = Duration();
       paused_ = false;
       start_timer (now);
+    }
+
+    void
+    start_reset (Time const& now,
+                 Duration const& new_timeout)
+    {
+      timeout_ = new_timeout;
+      start_reset (now);
     }
 
     void
@@ -360,6 +369,19 @@ class TimeControl
     get_until_timeout (Time const& now)
     {
       return start_time_ + timeout_ + delay_acc_ - (paused_ ? pause_start_ : now);
+    }
+
+    Duration
+    get_until_timeout_for_timeout (Time const& now,
+                                   Duration const& timeout)
+    {
+      return start_time_ + timeout + delay_acc_ - (paused_ ? pause_start_ : now);
+    }
+
+    Duration
+    get_elapsed (Time const& now)
+    {
+      return (paused_ ? pause_start_ : now) - start_time_ - delay_acc_;
     }
 };
 
