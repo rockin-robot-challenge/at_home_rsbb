@@ -95,6 +95,7 @@ add_subdirectory(roah_rsbb_comm/libs/)
 add_subdirectory(roah_rsbb_comm/include/)
 
 add_subdirectory(gen/)
+add_dependencies(roah_rsbb_qt roah_rsbb_generate_messages_cpp)
 
 include_directories(
   ${INCLUDE_DIRS}
