@@ -61,10 +61,12 @@ devices node with:
 roslaunch roah_rsbb roah_rsbb.launch
 ```
 
-For a test with dummy devices use:
+For a test with dummy home devices use:
 ```bash
-roslaunch roah_rsbb roah_rsbb_dummy.launch
+roslaunch roah_rsbb roah_rsbb_dummy.launch rsbb_host:=192.168.1.255 --screen
 ```
+
+The `rsbb_host` parameter should be set to the `Bcast` of the interface you want to use, as reported by `ifconfig`. Do not run the RSBB in the same computer as the client (robot).
 
 It may be necessary to delete the rqt cache for the new components to
 appear:
