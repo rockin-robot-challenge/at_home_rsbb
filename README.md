@@ -8,7 +8,7 @@ is included as a git submodule.
 
 :warning: Please remember to always update right before the competitions!
 ```bash
-cd roah_rsbb_comm_ros/
+cd roah_rsbb/
 git pull
 git submodule update --init --recursive
 ```
@@ -30,8 +30,15 @@ instructions at http://wiki.ros.org/ROS/Installation/ .
 This was tested with Ubuntu 12.04.5 LTS (Precise Pangolin) and
 14.04.1 LTS (Trusty Tahr).
 
-This package depends on the roah_devices and the rockin_benchmarking
+This package depends on the `roah_devices` and the `rockin_benchmarking`
 packages, which must be available in the Catkin workspace.
+- `roah_devices` can be cloned or downloaded from http://github.com/joaocgreis/roah_devices
+- `rockin_benchmarking` can be downloaded from http://users.isr.tecnico.ulisboa.pt/~jreis/rockin/rockin_benchmarking_2182.tar.xz
+
+For `rockin_benchmarking` to run, it is also necessary to install the Levenshtein module for Python:
+```bash
+sudo easy_install python-Levenshtein
+```
 
 
 ## Compiling
