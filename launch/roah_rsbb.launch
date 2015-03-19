@@ -1,7 +1,7 @@
 <launch>
-  <arg name="rsbb_host" default="10.255.255.255"/>
+  <arg name="rsbb_host" default="10.0.255.255"/>
   <arg name="rsbb_port" default="6666"/>
-  <arg name="smartif_host" default="10.0.0.81"/>
+  <arg name="smartif_host" default="192.168.1.56"/>
   <arg name="benchmarks_file" default="$(find roah_rsbb)/config/benchmarks.yaml"/>
   <arg name="schedule_file" default="$(find roah_rsbb)/config/schedule.yaml"/>
   <arg name="passwords_file" default="$(find roah_rsbb)/config/passwords.yaml"/>
