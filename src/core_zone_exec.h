@@ -737,11 +737,12 @@ class ExecutingExternallyControlledBenchmark
                 node["y"] = msg.has_object_class() ? msg.object_pose_y() : 0;
                 node["theta"] = msg.has_object_class() ? msg.object_pose_theta() : 0;
                 node["execution_time"] = exec_duration_.toSec();
+                string result = YAML::Dump (node);
 
-                log_.log_string ("/rsbb_log/opf_result", now, last_bmbox_state_->payload);
+                log_.log_string ("/rsbb_log/opf_result", now, result);
 
                 set_refbox_state (rockin_benchmarking::RefBoxState::READY);
-                set_client_state (rockin_benchmarking::ClientState::COMPLETED_GOAL, YAML::Dump (node));
+                set_client_state (rockin_benchmarking::ClientState::COMPLETED_GOAL, result);
                 check_bmbox_transition();
               }
               else if (event_.benchmark_code == "HOMF") {
