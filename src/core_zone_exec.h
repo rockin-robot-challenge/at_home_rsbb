@@ -311,7 +311,8 @@ class ExecutingSingleRobotBenchmark
     ReceiverRepeated rcv_final_command_;
 
     virtual void
-    receive_robot_state_2 (roah_rsbb_msgs::RobotState const& msg) {}
+    receive_robot_state_2 (Time const& now,
+                           roah_rsbb_msgs::RobotState const& msg) {}
 
     virtual void
     fill_benchmark_state_2 (roah_rsbb_msgs::BenchmarkState& msg) {}
@@ -348,9 +349,9 @@ class ExecutingSingleRobotBenchmark
                          uint16_t msg_type,
                          std::shared_ptr<const roah_rsbb_msgs::RobotState> msg)
     {
-      last_beacon_ = Time::now();
+      Time now = last_beacon_ = Time::now();
       Time msg_time (msg->time().sec(), msg->time().nsec());
-      Duration last_skew_ = msg_time - last_beacon_;
+      Duration last_skew_ = msg_time - now;
 
       ROS_DEBUG_STREAM ("Received RobotState from " << endpoint.address().to_string()
                         << ":" << endpoint.port()
@@ -359,25 +360,25 @@ class ExecutingSingleRobotBenchmark
                         << ", time: " << msg->time().sec() << "." << msg->time().nsec()
                         << ", skew: " << last_skew_);
 
-      ss_.active_robots.add (event_.team, robot_name_, last_skew_, last_beacon_);
+      ss_.active_robots.add (event_.team, robot_name_, last_skew_, now);
 
       messages_saved_ = msg->messages_saved();
       if ( (messages_saved_ == 0)
            && (param_direct<bool> ("~check_messages_saved", true))
            && ( (state_ == roah_rsbb_msgs::BenchmarkState_State_GOAL_TX)
                 || (state_ == roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT))
-           && ( (last_beacon_ - state_time_).toSec() > param_direct<double> ("~check_messages_saved_timeout", 5.0))) {
+           && ( (now - state_time_).toSec() > param_direct<double> ("~check_messages_saved_timeout", 5.0))) {
         phase_post ("STOPPED BENCHMARK: Messages saved information received from robot is still 0!");
       }
 
       ack_ = msg->time();
 
-      rcv_notifications_.receive (last_beacon_, msg->notifications());
-      rcv_activation_event_.receive (last_beacon_, msg->activation_event());
-      rcv_visitor_.receive (last_beacon_, msg->visitor());
-      rcv_final_command_.receive (last_beacon_, msg->final_command());
+      rcv_notifications_.receive (now, msg->notifications());
+      rcv_activation_event_.receive (now, msg->activation_event());
+      rcv_visitor_.receive (now, msg->visitor());
+      rcv_final_command_.receive (now, msg->final_command());
 
-      receive_robot_state_2 (*msg);
+      receive_robot_state_2 (now, *msg);
     }
 
   public:
@@ -421,14 +422,15 @@ class ExecutingSimpleBenchmark
   : public ExecutingSingleRobotBenchmark
 {
     void
-    receive_robot_state_2 (roah_rsbb_msgs::RobotState const& msg)
+    receive_robot_state_2 (Time const& now,
+                           roah_rsbb_msgs::RobotState const& msg)
     {
       switch (state_) {
         case roah_rsbb_msgs::BenchmarkState_State_STOP:
           break;
         case roah_rsbb_msgs::BenchmarkState_State_PREPARE:
           if (msg.robot_state() == roah_rsbb_msgs::RobotState_State_WAITING_GOAL) {
-            set_state (Time::now(), roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT, "Robot finished preparation, executing (no explicit goal)");
+            set_state (now, roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT, "Robot finished preparation, executing (no explicit goal)");
           }
           break;
         case roah_rsbb_msgs::BenchmarkState_State_GOAL_TX:
@@ -676,10 +678,9 @@ class ExecutingExternallyControlledBenchmark
     }
 
     void
-    receive_robot_state_2 (roah_rsbb_msgs::RobotState const& msg)
+    receive_robot_state_2 (Time const& now,
+                           roah_rsbb_msgs::RobotState const& msg)
     {
-      Time now = Time::now();
-
       switch (state_) {
         case roah_rsbb_msgs::BenchmarkState_State_STOP:
           break;
