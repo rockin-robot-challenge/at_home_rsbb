@@ -29,15 +29,6 @@
     <param name="timeout_ring_command" type="string" value="$(arg timeout_ring_command)"/>
   </node>
 
-  <group ns="fbm1h">
-    <rosparam file="$(find rockin_benchmarking)/config/fbm1h.yaml" command="load"/>
-    <node name="bmbox" pkg="rockin_benchmarking" type="fbm1h" respawn="true"/>
-    <node name="dummy_tf_origin" pkg="tf" type="static_transform_publisher" args="1 0 0 0 0 0 1 item origin 100" respawn="true"/>
-    <node name="dummy_tf_ref_board" pkg="tf" type="static_transform_publisher" args="1 0 0 0 0 0 1 origin ref_board 100" respawn="true"/>
-  </group>
-
-  <group ns="fbm2h">
-    <node name="bmbox" pkg="rockin_benchmarking" type="fbm2h" respawn="true"/>
-  </group>
+  <include file="$(find roah_rsbb)/launch/dummy_benchmarking_module.launch"/>
 
 </launch>
