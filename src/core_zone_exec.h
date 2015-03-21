@@ -553,7 +553,8 @@ class ExecutingExternallyControlledBenchmark
     bool last_timeout_;
 
     void
-    set_client_state (rockin_benchmarking::ClientState::_state_type client_state,
+    set_client_state (Time const& now,
+                      rockin_benchmarking::ClientState::_state_type client_state,
                       string const& payload = "")
     {
       if (client_state != client_state_) {
@@ -563,12 +564,14 @@ class ExecutingExternallyControlledBenchmark
         msg.state = client_state;
         msg.payload = payload;
         client_state_pub_.publish (msg);
-        log_.log_uint8 ("/rsbb_log/client_state", Time::now(), client_state);
+        log_.log_uint8 ("/rsbb_log/client_state", now, client_state);
+        log_.log_string ("/rsbb_log/client_state_payload", now, payload);
       }
     }
 
     void
-    set_refbox_state (rockin_benchmarking::RefBoxState::_state_type refbox_state,
+    set_refbox_state (Time const& now,
+                      rockin_benchmarking::RefBoxState::_state_type refbox_state,
                       string const& payload = "")
     {
       if (refbox_state != refbox_state_) {
@@ -578,7 +581,8 @@ class ExecutingExternallyControlledBenchmark
         msg.state = refbox_state;
         msg.payload = payload;
         refbox_state_pub_.publish (msg);
-        log_.log_uint8 ("/rsbb_log/refbox_state", Time::now(), refbox_state);
+        log_.log_uint8 ("/rsbb_log/refbox_state", now, refbox_state);
+        log_.log_string ("/rsbb_log/refbox_state_payload", now, payload);
       }
     }
 
@@ -611,7 +615,7 @@ class ExecutingExternallyControlledBenchmark
           if ( (refbox_state_ == rockin_benchmarking::RefBoxState::READY)
                && (client_state_ == rockin_benchmarking::ClientState::WAITING_GOAL)) {
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::WAITING_MANUAL_OPERATION) {
-              set_refbox_state (rockin_benchmarking::RefBoxState::EXECUTING_MANUAL_OPERATION);
+              set_refbox_state (now, rockin_benchmarking::RefBoxState::EXECUTING_MANUAL_OPERATION);
               manual_operation_ = last_bmbox_state_->payload;
 
               // Stop main timer
@@ -654,8 +658,8 @@ class ExecutingExternallyControlledBenchmark
               time_.resume (now);
 
               set_state (now, roah_rsbb_msgs::BenchmarkState_State_GOAL_TX, "Robot finished preparation, no goal from BmBox, starting execution");
-              set_refbox_state (rockin_benchmarking::RefBoxState::EXECUTING_GOAL);
-              set_client_state (rockin_benchmarking::ClientState::EXECUTING_GOAL);
+              set_refbox_state (now, rockin_benchmarking::RefBoxState::EXECUTING_GOAL);
+              set_client_state (now, rockin_benchmarking::ClientState::EXECUTING_GOAL);
               // No check_bmbox_transition here
             }
           }
@@ -672,7 +676,7 @@ class ExecutingExternallyControlledBenchmark
                && (client_state_ == rockin_benchmarking::ClientState::COMPLETED_GOAL)) {
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::TRANSMITTING_SCORE) {
               log_.log_string ("/rsbb_log/bmbox/score", now, last_bmbox_state_->payload);
-              set_refbox_state (rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
+              set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
               phase_post ("Benchmark complete! Received score from BmBox: " + last_bmbox_state_->payload);
             }
             else if ( (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::WAITING_MANUAL_OPERATION)
@@ -694,8 +698,8 @@ class ExecutingExternallyControlledBenchmark
         case roah_rsbb_msgs::BenchmarkState_State_PREPARE:
           if (client_state_ != rockin_benchmarking::ClientState::WAITING_GOAL) {
             if (msg.robot_state() == roah_rsbb_msgs::RobotState_State_WAITING_GOAL) {
-              set_refbox_state (rockin_benchmarking::RefBoxState::READY);
-              set_client_state (rockin_benchmarking::ClientState::WAITING_GOAL);
+              set_refbox_state (now, rockin_benchmarking::RefBoxState::READY);
+              set_client_state (now, rockin_benchmarking::ClientState::WAITING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is waiting for goal.");
             }
@@ -704,8 +708,8 @@ class ExecutingExternallyControlledBenchmark
         case roah_rsbb_msgs::BenchmarkState_State_GOAL_TX:
           if (client_state_ == rockin_benchmarking::ClientState::WAITING_GOAL) {
             if (msg.robot_state() == roah_rsbb_msgs::RobotState_State_EXECUTING) {
-              set_refbox_state (rockin_benchmarking::RefBoxState::EXECUTING_GOAL);
-              set_client_state (rockin_benchmarking::ClientState::EXECUTING_GOAL);
+              set_refbox_state (now, rockin_benchmarking::RefBoxState::EXECUTING_GOAL);
+              set_client_state (now, rockin_benchmarking::ClientState::EXECUTING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is executing.");
             }
@@ -741,8 +745,8 @@ class ExecutingExternallyControlledBenchmark
 
                 log_.log_string ("/rsbb_log/opf_result", now, result);
 
-                set_refbox_state (rockin_benchmarking::RefBoxState::READY);
-                set_client_state (rockin_benchmarking::ClientState::COMPLETED_GOAL, result);
+                set_refbox_state (now, rockin_benchmarking::RefBoxState::READY);
+                set_client_state (now, rockin_benchmarking::ClientState::COMPLETED_GOAL, result);
                 check_bmbox_transition();
               }
               else if (event_.benchmark_code == "HOMF") {
@@ -814,14 +818,14 @@ class ExecutingExternallyControlledBenchmark
       if (refbox_state_ != rockin_benchmarking::RefBoxState::RECEIVED_SCORE) {
         if (stoped_due_to_timeout_
             && (! last_timeout_)) {
-          set_refbox_state (rockin_benchmarking::RefBoxState::END, "reason: timeout");
+          set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: timeout");
           phase_exec ("Robot timedout a goal, trying the next one...");
         }
         else {
-          set_refbox_state (rockin_benchmarking::RefBoxState::END, "reason: stop");
+          set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: stop");
         }
       }
-      set_client_state (rockin_benchmarking::ClientState::END);
+      set_client_state (now, rockin_benchmarking::ClientState::END);
     }
 
   private:
@@ -866,7 +870,9 @@ class ExecutingExternallyControlledBenchmark
       if ( (state_ == roah_rsbb_msgs::BenchmarkState_State_PREPARE)
            && (refbox_state_ == rockin_benchmarking::RefBoxState::EXECUTING_MANUAL_OPERATION)
            && (client_state_ == rockin_benchmarking::ClientState::WAITING_GOAL)) {
-        set_refbox_state (rockin_benchmarking::RefBoxState::EXECUTING_GOAL);
+        Time now = Time::now();
+
+        set_refbox_state (now, rockin_benchmarking::RefBoxState::EXECUTING_GOAL);
         check_bmbox_transition();
       }
     }
@@ -875,9 +881,9 @@ class ExecutingExternallyControlledBenchmark
     omf_complete()
     {
       if (waiting_for_omf_complete_) {
-        waiting_for_omf_complete_ = false;
-
         Time now = Time::now();
+
+        waiting_for_omf_complete_ = false;
 
         if (exec_duration_.isZero()) {
           exec_duration_ = now - last_exec_start_;
@@ -893,8 +899,8 @@ class ExecutingExternallyControlledBenchmark
 
         log_.log_string ("/rsbb_log/omf_complete", now, last_bmbox_state_->payload);
 
-        set_refbox_state (rockin_benchmarking::RefBoxState::READY);
-        set_client_state (rockin_benchmarking::ClientState::COMPLETED_GOAL, YAML::Dump (node));
+        set_refbox_state (now, rockin_benchmarking::RefBoxState::READY);
+        set_client_state (now, rockin_benchmarking::ClientState::COMPLETED_GOAL, YAML::Dump (node));
         check_bmbox_transition();
 
         goal_initial_state_.clear();
