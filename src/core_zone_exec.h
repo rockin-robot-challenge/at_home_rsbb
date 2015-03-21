@@ -541,6 +541,7 @@ class ExecutingExternallyControlledBenchmark
     uint32_t damaged_switches_;
 
     Duration total_timeout_;
+    bool last_timeout_;
 
     void
     set_client_state (rockin_benchmarking::ClientState::_state_type client_state,
@@ -788,15 +789,24 @@ class ExecutingExternallyControlledBenchmark
       // Therefore, timeout refers to each object and a total_timeout
       // is added for the whole benchmark.
       total_timeout_ -= time_.get_elapsed (now);
-      time_.start_reset (now, min (event_.benchmark.timeout, total_timeout_));
+      if (event_.benchmark.timeout < total_timeout_) {
+        time_.start_reset (now, event_.benchmark.timeout);
+        last_timeout_ = false;
+      }
+      else {
+        time_.start_reset (now, total_timeout_);
+        last_timeout_ = true;
+      }
     }
 
     void
     phase_post_2 (Time const& now)
     {
       if (refbox_state_ != rockin_benchmarking::RefBoxState::RECEIVED_SCORE) {
-        if (stoped_due_to_timeout_) {
+        if (stoped_due_to_timeout_
+            && (! last_timeout_)) {
           set_refbox_state (rockin_benchmarking::RefBoxState::END, "reason: timeout");
+          phase_exec ("Robot timedout a goal, trying the next one...");
         }
         else {
           set_refbox_state (rockin_benchmarking::RefBoxState::END, "reason: stop");
