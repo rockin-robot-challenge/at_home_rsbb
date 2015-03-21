@@ -460,34 +460,41 @@ class ExecutingSimpleBenchmark
           roah_devices::Bool b;
           b.request.data = msg.devices_switch_1();
           call_service ("/devices/switch_1/set", b);
+          log_.log_uint8 ("/rsbb_log/devices/switch_1", now, b.request.data ? 1 : 0);
         }
         if (msg.has_devices_switch_2()
             && (msg.devices_switch_2() != ss_.last_devices_state->switch_2)) {
           roah_devices::Bool b;
           b.request.data = msg.devices_switch_2();
           call_service ("/devices/switch_2/set", b);
+          log_.log_uint8 ("/rsbb_log/devices/switch_2", now, b.request.data ? 1 : 0);
         }
         if (msg.has_devices_switch_3()
             && (msg.devices_switch_3() != ss_.last_devices_state->switch_3)) {
           roah_devices::Bool b;
           b.request.data = msg.devices_switch_3();
           call_service ("/devices/switch_3/set", b);
+          log_.log_uint8 ("/rsbb_log/devices/switch_3", now, b.request.data ? 1 : 0);
         }
         if (msg.has_devices_blinds()
             && (msg.devices_blinds() != ss_.last_devices_state->blinds)) {
           roah_devices::Percentage p;
           p.request.data = msg.devices_blinds();
           call_service ("/devices/blinds/set", p);
+          log_.log_uint8 ("/rsbb_log/devices/blinds", now, p.request.data);
         }
         if (msg.has_devices_dimmer()
             && (msg.devices_dimmer() != ss_.last_devices_state->dimmer)) {
           roah_devices::Percentage p;
           p.request.data = msg.devices_dimmer();
           call_service ("/devices/dimmer/set", p);
+          log_.log_uint8 ("/rsbb_log/devices/dimmer", now, p.request.data);
         }
 
-        if (msg.has_tablet_display_map()) {
+        if (msg.has_tablet_display_map()
+            && (ss_.tablet_display_map != msg.tablet_display_map())) {
           ss_.tablet_display_map = msg.tablet_display_map();
+          log_.log_uint8 ("/rsbb_log/tablet/display_map", now, ss_.tablet_display_map ? 1 : 0);
         }
       }
     }
