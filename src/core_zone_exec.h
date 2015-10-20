@@ -702,6 +702,7 @@ class ExecutingExternallyControlledBenchmark
               set_client_state (now, rockin_benchmarking::ClientState::WAITING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is waiting for goal.");
+	      ROS_INFO("1");
             }
           }
           break;
@@ -712,17 +713,20 @@ class ExecutingExternallyControlledBenchmark
               set_client_state (now, rockin_benchmarking::ClientState::EXECUTING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is executing.");
+	      ROS_INFO("2");
             }
           }
           break;
         case roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT:
           if (client_state_ == rockin_benchmarking::ClientState::EXECUTING_GOAL) {
             if (msg.robot_state() == roah_rsbb_msgs::RobotState_State_RESULT_TX) {
+	      ROS_INFO("3");
               if (exec_duration_.isZero()) {
                 exec_duration_ = now - last_exec_start_;
                 if (event_.benchmark_code == "HOMF") {
                   set_state (now, state_, "Robot finished executing. Waiting for switches input from referee.");
 
+		  ROS_INFO("4");
                   // Time for the referee to press OMF Complete should be discarded
                   time_.stop_pause (now);
                 }
