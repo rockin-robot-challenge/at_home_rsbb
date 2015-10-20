@@ -25,6 +25,8 @@
 #include "core_shared_state.h"
 #include "core_zone_base.h"
 
+#include <geometry_msgs/Pose2D.h>
+
 
 
 class ExecutingBenchmark
@@ -552,6 +554,10 @@ class ExecutingExternallyControlledBenchmark
     Duration total_timeout_;
     bool last_timeout_;
 
+    Publisher tbm2_pub_;
+    vector<vector<float>> tbm2_locations_;
+    int location_idx_;
+
     void
     set_client_state (Time const& now,
                       rockin_benchmarking::ClientState::_state_type client_state,
@@ -702,7 +708,15 @@ class ExecutingExternallyControlledBenchmark
               set_client_state (now, rockin_benchmarking::ClientState::WAITING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is waiting for goal.");
-	      ROS_INFO("1");
+	      ROS_INFO("at_prepare");
+
+	      geometry_msgs::Pose2D msg;
+	      msg.x = tbm2_locations_[location_idx_][0];
+	      msg.y = tbm2_locations_[location_idx_][1];
+	      msg.theta = tbm2_locations_[location_idx_][2];
+
+	      tbm2_pub_.publish(msg);
+	      location_idx_++;
             }
           }
           break;
@@ -713,20 +727,20 @@ class ExecutingExternallyControlledBenchmark
               set_client_state (now, rockin_benchmarking::ClientState::EXECUTING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is executing.");
-	      ROS_INFO("2");
+	      ROS_INFO("at_goal_tx");
             }
           }
           break;
         case roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT:
           if (client_state_ == rockin_benchmarking::ClientState::EXECUTING_GOAL) {
             if (msg.robot_state() == roah_rsbb_msgs::RobotState_State_RESULT_TX) {
-	      ROS_INFO("3");
+	      ROS_INFO("at_waiting_result");
               if (exec_duration_.isZero()) {
                 exec_duration_ = now - last_exec_start_;
                 if (event_.benchmark_code == "HOMF") {
                   set_state (now, state_, "Robot finished executing. Waiting for switches input from referee.");
 
-		  ROS_INFO("4");
+		  ROS_INFO("at_waiting_Result_2");
                   // Time for the referee to press OMF Complete should be discarded
                   time_.stop_pause (now);
                 }
@@ -863,7 +877,25 @@ class ExecutingExternallyControlledBenchmark
       , last_bmbox_state_ (boost::make_shared<rockin_benchmarking::BmBoxState>())
       , annoying_timer_ (ss_.nh.createTimer (Duration (0.2), &ExecutingExternallyControlledBenchmark::annoying_timer, this))
       , total_timeout_ (event.benchmark.total_timeout)
+      , tbm2_pub_ (ss_.nh.advertise<geometry_msgs::Pose2D> (bmbox_prefix (event) + "tbm2_pose", 1, true))
+      , location_idx_ (0)
     {
+      ros::NodeHandle nh;
+      int num_points;
+      nh.getParam("/roah_rsbb_core/num_points", num_points);
+
+      vector<vector<float>> temp(num_points, vector<float>(3, 1));
+
+      for (int i = 0; i < num_points; i++)
+      {
+	std::vector<float> p;
+	nh.getParam("/roah_rsbb_core/p" + std::to_string(i), p);
+	temp[i][0] = p[0];
+	temp[i][1] = p[1];
+	temp[i][2] = p[2];
+      }
+
+      tbm2_locations_ = temp;
     }
 
     void

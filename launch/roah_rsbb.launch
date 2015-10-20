@@ -5,18 +5,20 @@
   <arg name="benchmarks_file" default="$(find roah_rsbb)/config/benchmarks.yaml"/>
   <arg name="schedule_file" default="$(find roah_rsbb)/config/schedule.yaml"/>
   <arg name="passwords_file" default="$(find roah_rsbb)/config/passwords.yaml"/>
+  <arg name="tbm2_locations_file" default="$(find roah_rsbb)/config/tbm2_locations.yaml"/>
   <arg name="log_dir" default="$(find roah_rsbb)/log"/>
   <arg name="bell_ring_command" default="mplayer $(find roah_rsbb)/bell.mp3"/>
   <arg name="timeout_ring_command" default="mplayer $(find roah_rsbb)/timeout.mp3"/>
 
   <node pkg="roah_rsbb" type="shutdown_service" name="roah_rsbb_core_shutdown" required="true"/>
 
-  <node pkg="roah_rsbb" type="core" name="roah_rsbb_core" respawn="true">
+  <node pkg="roah_rsbb" type="core" name="roah_rsbb_core" respawn="true" output="screen">
     <param name="rsbb_host" type="string" value="$(arg rsbb_host)"/>
     <param name="rsbb_port" type="int" value="$(arg rsbb_port)"/>
     <param name="benchmarks_file" type="string" value="$(arg benchmarks_file)"/>
     <param name="schedule_file" type="string" value="$(arg schedule_file)"/>
     <param name="passwords_file" type="string" value="$(arg passwords_file)"/>
+    <rosparam command="load" file="$(arg tbm2_locations_file)"/>
     <param name="log_dir" type="string" value="$(arg log_dir)"/>
   </node>
 
