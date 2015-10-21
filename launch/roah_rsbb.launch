@@ -12,7 +12,7 @@
 
   <node pkg="roah_rsbb" type="shutdown_service" name="roah_rsbb_core_shutdown" required="true"/>
 
-  <node pkg="roah_rsbb" type="core" name="roah_rsbb_core" respawn="true" output="screen">
+  <node pkg="roah_rsbb" type="core" name="roah_rsbb_core" respawn="true">
     <param name="rsbb_host" type="string" value="$(arg rsbb_host)"/>
     <param name="rsbb_port" type="int" value="$(arg rsbb_port)"/>
     <param name="benchmarks_file" type="string" value="$(arg benchmarks_file)"/>

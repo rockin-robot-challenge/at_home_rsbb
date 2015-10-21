@@ -25,8 +25,6 @@
 #include "core_shared_state.h"
 #include "core_zone_base.h"
 
-#include <geometry_msgs/Pose2D.h>
-
 
 
 class ExecutingBenchmark
@@ -554,9 +552,9 @@ class ExecutingExternallyControlledBenchmark
     Duration total_timeout_;
     bool last_timeout_;
 
-    Publisher tbm2_pub_;
     vector<vector<float>> tbm2_locations_;
     int location_idx_;
+    int tbm2_num_points_;
 
     void
     set_client_state (Time const& now,
@@ -709,14 +707,6 @@ class ExecutingExternallyControlledBenchmark
               check_bmbox_transition();
               set_state (now, state_, "Robot is waiting for goal.");
 	      ROS_INFO("at_prepare");
-
-	      geometry_msgs::Pose2D msg;
-	      msg.x = tbm2_locations_[location_idx_][0];
-	      msg.y = tbm2_locations_[location_idx_][1];
-	      msg.theta = tbm2_locations_[location_idx_][2];
-
-	      tbm2_pub_.publish(msg);
-	      location_idx_++;
             }
           }
           break;
@@ -770,6 +760,18 @@ class ExecutingExternallyControlledBenchmark
               else if (event_.benchmark_code == "HOMF") {
                 waiting_for_omf_complete_ = true;
               }
+	      else if (event_.benchmark_code == "HNF") {
+		if (location_idx_ < tbm2_num_points_)
+		  location_idx_++;
+		else {
+		  set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
+		  phase_post ("Benchmark complete! Received score from BmBox: " + last_bmbox_state_->payload);
+		}
+
+                set_refbox_state (now, rockin_benchmarking::RefBoxState::READY);
+                set_client_state (now, rockin_benchmarking::ClientState::COMPLETED_GOAL, result);
+                check_bmbox_transition();
+	      }
             }
           }
           break;
@@ -786,6 +788,10 @@ class ExecutingExternallyControlledBenchmark
         for (auto const& i : goal_switches_) {
           msg.add_switches (i);
         }
+
+	msg.add_target_pose_x (tbm2_locations_[location_idx_][0]);
+	msg.add_target_pose_y (tbm2_locations_[location_idx_][1]);
+	msg.add_target_pose_theta (tbm2_locations_[location_idx_][2]);
       }
     }
 
@@ -877,16 +883,14 @@ class ExecutingExternallyControlledBenchmark
       , last_bmbox_state_ (boost::make_shared<rockin_benchmarking::BmBoxState>())
       , annoying_timer_ (ss_.nh.createTimer (Duration (0.2), &ExecutingExternallyControlledBenchmark::annoying_timer, this))
       , total_timeout_ (event.benchmark.total_timeout)
-      , tbm2_pub_ (ss_.nh.advertise<geometry_msgs::Pose2D> (bmbox_prefix (event) + "tbm2_pose", 1, true))
       , location_idx_ (0)
     {
       ros::NodeHandle nh;
-      int num_points;
-      nh.getParam("/roah_rsbb_core/num_points", num_points);
+      nh.getParam("/roah_rsbb_core/num_points", tbm2_num_points_);
 
-      vector<vector<float>> temp(num_points, vector<float>(3, 1));
+      vector<vector<float>> temp(tbm2_num_points_, vector<float>(3, 1));
 
-      for (int i = 0; i < num_points; i++)
+      for (int i = 0; i < tbm2_num_points_; i++)
       {
 	std::vector<float> p;
 	nh.getParam("/roah_rsbb_core/p" + std::to_string(i), p);
