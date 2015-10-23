@@ -621,7 +621,7 @@ class ExecutingExternallyControlledBenchmark
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::WAITING_MANUAL_OPERATION) {
               set_refbox_state (now, rockin_benchmarking::RefBoxState::EXECUTING_MANUAL_OPERATION);
               manual_operation_ = last_bmbox_state_->payload;
-
+	      ROS_INFO("BmBox: at_prepare");
               // Stop main timer
               time_.stop_pause (now);
             }
@@ -706,7 +706,7 @@ class ExecutingExternallyControlledBenchmark
               set_client_state (now, rockin_benchmarking::ClientState::WAITING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is waiting for goal.");
-	      ROS_INFO("at_prepare");
+	      ROS_INFO("ROBOT: at_prepare");
             }
           }
           break;
@@ -717,20 +717,20 @@ class ExecutingExternallyControlledBenchmark
               set_client_state (now, rockin_benchmarking::ClientState::EXECUTING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is executing.");
-	      ROS_INFO("at_goal_tx");
+	      ROS_INFO("ROBOT: at_goal_tx");
             }
           }
           break;
         case roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT:
           if (client_state_ == rockin_benchmarking::ClientState::EXECUTING_GOAL) {
             if (msg.robot_state() == roah_rsbb_msgs::RobotState_State_RESULT_TX) {
-	      ROS_INFO("at_waiting_result");
+	      ROS_INFO("ROBOT: at_waiting_result");
               if (exec_duration_.isZero()) {
                 exec_duration_ = now - last_exec_start_;
                 if (event_.benchmark_code == "HOMF") {
                   set_state (now, state_, "Robot finished executing. Waiting for switches input from referee.");
 
-		  ROS_INFO("at_waiting_Result_2");
+		  ROS_INFO("ROBOT: at_waiting_Result_2");
                   // Time for the referee to press OMF Complete should be discarded
                   time_.stop_pause (now);
                 }
@@ -769,7 +769,7 @@ class ExecutingExternallyControlledBenchmark
 		}
 
                 set_refbox_state (now, rockin_benchmarking::RefBoxState::READY);
-                set_client_state (now, rockin_benchmarking::ClientState::COMPLETED_GOAL, result);
+                set_client_state (now, rockin_benchmarking::ClientState::COMPLETED_GOAL, "");
                 check_bmbox_transition();
 	      }
             }
@@ -782,17 +782,19 @@ class ExecutingExternallyControlledBenchmark
     fill_benchmark_state_2 (roah_rsbb_msgs::BenchmarkState& msg)
     {
       if (state_ == roah_rsbb_msgs::BenchmarkState_State_GOAL_TX) {
-        for (auto const& i : goal_initial_state_) {
-          msg.add_initial_state (i);
-        }
-        for (auto const& i : goal_switches_) {
-          msg.add_switches (i);
-        }
+        /* for (auto const& i : goal_initial_state_) { */
+        /*   msg.add_initial_state (i); */
+        /* } */
+        /* for (auto const& i : goal_switches_) { */
+        /*   msg.add_switches (i); */
+        /* } */
 
-	msg.add_target_pose_x (tbm2_locations_[location_idx_][0]);
-	msg.add_target_pose_y (tbm2_locations_[location_idx_][1]);
-	msg.add_target_pose_theta (tbm2_locations_[location_idx_][2]);
+	msg.set_target_pose_x (tbm2_locations_[location_idx_][0]);
+	msg.set_target_pose_y (tbm2_locations_[location_idx_][1]);
+	msg.set_target_pose_theta (tbm2_locations_[location_idx_][2]);
+	ROS_INFO("publishing message!");
       }
+      ROS_INFO("not (!!!!) publishing message!");
     }
 
     void
@@ -859,7 +861,7 @@ class ExecutingExternallyControlledBenchmark
       if (event.benchmark_code == "HOPF") {
         return "/fbm1h/";
       }
-      else if (event.benchmark_code == "HOMF") {
+      else if (event.benchmark_code == "HNF") {
         return "/fbm2h/";
       }
 
@@ -991,7 +993,7 @@ class ExecutingExternallyControlledBenchmark
         add_to_sting (zone.state) << "You may need to restart BmBox if you are to press start again";
       }
 
-      if ( (event_.benchmark_code == "HOMF")
+      if ( (event_.benchmark_code == "HNF")
            && (! (goal_initial_state_.empty()))
            && (phase_ == PHASE_EXEC)) {
         zone.omf = true;

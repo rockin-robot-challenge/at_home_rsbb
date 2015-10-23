@@ -72,7 +72,7 @@ class Zone
                 || (e.benchmark_code == "HWV")
                 || (e.benchmark_code == "HCFGAC")
                 || (e.benchmark_code == "HOPF")
-                || (e.benchmark_code == "HOMF")
+                || (e.benchmark_code == "HNF")
                 || (e.benchmark_code == "HSUF"))) {
           ROS_FATAL_STREAM ("Zone " << name_ << ": unsupported benchmark code " << e.benchmark_code);
           abort_rsbb();
@@ -89,7 +89,7 @@ class Zone
              || (e.benchmark_code == "HWV")
              || (e.benchmark_code == "HCFGAC")
              || (e.benchmark_code == "HOPF")
-             || (e.benchmark_code == "HOMF")) {
+             || (e.benchmark_code == "HNF")) {
           if (e.team == "ALL") {
             ROS_FATAL_STREAM ("Zone " << name_ << ": benchmark code " << e.benchmark_code << " not supported for team ALL");
             abort_rsbb();
@@ -158,7 +158,7 @@ class Zone
             executing_benchmark_.reset (new ExecutingSimpleBenchmark (ss_, current_event_->second, boost::bind (&Zone::end, this), ri.robot));
           }
           else if ( (current_event_->second.benchmark_code == "HOPF")
-                    || (current_event_->second.benchmark_code == "HOMF")) {
+                    || (current_event_->second.benchmark_code == "HNF")) {
             executing_benchmark_.reset (new ExecutingExternallyControlledBenchmark (ss_, current_event_->second, boost::bind (&Zone::end, this), ri.robot));
           }
           else {

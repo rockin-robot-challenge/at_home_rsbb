@@ -7,7 +7,7 @@
     - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: TestingTeam }
     - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: TestingTeam }
     - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: TestingTeam }
-    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: TestingTeam }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: TestingTeam }
     - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
 - zone: Testing b-it-bots
@@ -16,7 +16,7 @@
     - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: b-it-bots }
     - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: b-it-bots }
     - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: b-it-bots }
-    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: b-it-bots }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: b-it-bots }
     - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
 - zone: Testing BARC
@@ -25,7 +25,7 @@
     - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: BARC }
     - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: BARC }
     - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: BARC }
-    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: BARC }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: BARC }
     - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
 - zone: Testing Donaxi
@@ -34,7 +34,7 @@
     - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: Donaxi }
     - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: Donaxi }
     - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: Donaxi }
-    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Donaxi }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Donaxi }
     - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
 - zone: Testing homer
@@ -43,7 +43,7 @@
     - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: homer }
     - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: homer }
     - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: homer }
-    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: homer }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: homer }
     - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
 - zone: Testing Pumas
@@ -52,7 +52,7 @@
     - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: Pumas }
     - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: Pumas }
     - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: Pumas }
-    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Pumas }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Pumas }
     - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
 - zone: Testing SocRob
@@ -61,7 +61,7 @@
     - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: SocRob }
     - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: SocRob }
     - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: SocRob }
-    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: SocRob }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: SocRob }
     - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
 - zone: Testing Ursus
@@ -70,7 +70,7 @@
     - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: Ursus }
     - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: Ursus }
     - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: Ursus }
-    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Ursus }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Ursus }
     - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
 
 - zone: Testing Watermelon
@@ -79,5 +79,5 @@
     - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: Watermelon }
     - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: Watermelon }
     - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: Watermelon }
-    - { benchmark: HOMF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Watermelon }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Watermelon }
     - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
