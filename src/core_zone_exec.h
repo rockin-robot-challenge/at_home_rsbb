@@ -630,6 +630,7 @@ class ExecutingExternallyControlledBenchmark
                  || (refbox_state_ == rockin_benchmarking::RefBoxState::EXECUTING_GOAL))
                && (client_state_ == rockin_benchmarking::ClientState::WAITING_GOAL)) {
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::TRANSMITTING_GOAL) {
+	      ROS_INFO("BmBox: transmitting goal");
               last_exec_start_ = now;
               exec_duration_ = Duration();
 
@@ -672,12 +673,14 @@ class ExecutingExternallyControlledBenchmark
           if ( (refbox_state_ == rockin_benchmarking::RefBoxState::EXECUTING_GOAL)
                && (client_state_ == rockin_benchmarking::ClientState::EXECUTING_GOAL)
                && (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::WAITING_RESULT)) {
+	    ROS_INFO("BmBox: goal tx");
             set_state (now, roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT, "Robot received goal, waiting for result");
           }
           break;
         case roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT:
           if ( (refbox_state_ == rockin_benchmarking::RefBoxState::READY)
                && (client_state_ == rockin_benchmarking::ClientState::COMPLETED_GOAL)) {
+	    ROS_INFO("BmBox: waiting reuslt");
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::TRANSMITTING_SCORE) {
               log_.log_string ("/rsbb_log/bmbox/score", now, last_bmbox_state_->payload);
               set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
@@ -794,7 +797,6 @@ class ExecutingExternallyControlledBenchmark
 	msg.set_target_pose_theta (tbm2_locations_[location_idx_][2]);
 	ROS_INFO("publishing message!");
       }
-      ROS_INFO("not (!!!!) publishing message!");
     }
 
     void
@@ -817,25 +819,25 @@ class ExecutingExternallyControlledBenchmark
     void
     phase_exec_2 (Time const& now)
     {
-      waiting_for_omf_complete_ = false;
-      goal_initial_state_.clear();
-      goal_switches_.clear();
-      on_switches_.clear();
-      changed_switches_.clear();
-      damaged_switches_ = 0;
+      /* waiting_for_omf_complete_ = false; */
+      /* goal_initial_state_.clear(); */
+      /* goal_switches_.clear(); */
+      /* on_switches_.clear(); */
+      /* changed_switches_.clear(); */
+      /* damaged_switches_ = 0; */
 
-      // OPF: Timeout should also happen for each object.
-      // Therefore, timeout refers to each object and a total_timeout
-      // is added for the whole benchmark.
-      total_timeout_ -= time_.get_elapsed (now);
-      if (event_.benchmark.timeout < total_timeout_) {
-        time_.start_reset (now, event_.benchmark.timeout);
-        last_timeout_ = false;
-      }
-      else {
-        time_.start_reset (now, total_timeout_);
-        last_timeout_ = true;
-      }
+      /* // OPF: Timeout should also happen for each object. */
+      /* // Therefore, timeout refers to each object and a total_timeout */
+      /* // is added for the whole benchmark. */
+      /* total_timeout_ -= time_.get_elapsed (now); */
+      /* if (event_.benchmark.timeout < total_timeout_) { */
+      /*   time_.start_reset (now, event_.benchmark.timeout); */
+      /*   last_timeout_ = false; */
+      /* } */
+      /* else { */
+      /*   time_.start_reset (now, total_timeout_); */
+      /*   last_timeout_ = true; */
+      /* } */
     }
 
     void
