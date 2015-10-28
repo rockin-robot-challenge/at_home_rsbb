@@ -552,9 +552,9 @@ class ExecutingExternallyControlledBenchmark
     Duration total_timeout_;
     bool last_timeout_;
 
-    vector<vector<float>> tbm2_locations_;
+    vector<vector<float>> fbm2_locations_;
     int location_idx_;
-    int tbm2_num_points_;
+    int fbm2_num_points_;
 
     void
     set_client_state (Time const& now,
@@ -764,7 +764,7 @@ class ExecutingExternallyControlledBenchmark
                 waiting_for_omf_complete_ = true;
               }
 	      else if (event_.benchmark_code == "HNF") {
-		if (location_idx_ < tbm2_num_points_)
+		if (location_idx_ < fbm2_num_points_)
 		  location_idx_++;
 		else {
 		  set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
@@ -792,9 +792,9 @@ class ExecutingExternallyControlledBenchmark
         /*   msg.add_switches (i); */
         /* } */
 
-	msg.set_target_pose_x (tbm2_locations_[location_idx_][0]);
-	msg.set_target_pose_y (tbm2_locations_[location_idx_][1]);
-	msg.set_target_pose_theta (tbm2_locations_[location_idx_][2]);
+	msg.set_target_pose_x (fbm2_locations_[location_idx_][0]);
+	msg.set_target_pose_y (fbm2_locations_[location_idx_][1]);
+	msg.set_target_pose_theta (fbm2_locations_[location_idx_][2]);
 	ROS_INFO("publishing message!");
       }
     }
@@ -890,11 +890,11 @@ class ExecutingExternallyControlledBenchmark
       , location_idx_ (0)
     {
       ros::NodeHandle nh;
-      nh.getParam("/roah_rsbb_core/num_points", tbm2_num_points_);
+      nh.getParam("/roah_rsbb_core/num_points", fbm2_num_points_);
 
-      vector<vector<float>> temp(tbm2_num_points_, vector<float>(3, 1));
+      vector<vector<float>> temp(fbm2_num_points_, vector<float>(3, 1));
 
-      for (int i = 0; i < tbm2_num_points_; i++)
+      for (int i = 0; i < fbm2_num_points_; i++)
       {
 	std::vector<float> p;
 	nh.getParam("/roah_rsbb_core/p" + std::to_string(i), p);
@@ -903,7 +903,7 @@ class ExecutingExternallyControlledBenchmark
 	temp[i][2] = p[2];
       }
 
-      tbm2_locations_ = temp;
+      fbm2_locations_ = temp;
     }
 
     void
