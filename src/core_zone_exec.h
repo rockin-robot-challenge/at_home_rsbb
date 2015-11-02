@@ -555,6 +555,11 @@ class ExecutingExternallyControlledBenchmark
     vector<vector<float>> fbm2_locations_;
     int location_idx_;
     int fbm2_num_points_;
+    int fbm2_penalty_time_;
+    int fbm2_timeout_time_;
+    std::vector<double> fbm2_starting_pose_;
+    //std::vector<std::vector<double>> fbm2_waypoints_;
+
 
     void
     set_client_state (Time const& now,
@@ -890,7 +895,86 @@ class ExecutingExternallyControlledBenchmark
       , location_idx_ (0)
     {
       ros::NodeHandle nh;
-      nh.getParam("/roah_rsbb_core/num_points", fbm2_num_points_);
+      string fbm2_locations;
+      nh.getParam("/roah_rsbb_core/fbm2_locations_file", fbm2_locations);
+      YAML::Node fbm2_config = YAML::LoadFile(fbm2_locations);
+
+      for (YAML::Node const& fbm2_node : fbm2_config) {
+        if (! fbm2_node["goal"]) {
+          ROS_FATAL_STREAM ("FBM2H file is missing a \"goal\" entry!");
+          abort_rsbb();
+        }
+
+        cout << "1" << endl;
+
+        if (fbm2_node["goal"]) {
+          cout << "2" << endl;
+
+          cout << "3" << endl;
+          for (YAML::Node const& goal_node : fbm2_node["goal"]) {
+            if (! goal_node["waypoints"]) {
+              ROS_FATAL_STREAM ("FBM2H file is missing a \"waypoints\" entry!");
+              abort_rsbb();
+            }
+            if (! goal_node["starting_pose"]) {
+              ROS_FATAL_STREAM ("FBM2H file is missing a \"starting_pose\" entry!");
+              abort_rsbb();
+            }
+            if (! goal_node["penalty_time"]) {
+              ROS_FATAL_STREAM ("FBM2H file is missing a \"penalty_time\" entry!");
+              abort_rsbb();
+            }
+            if (! goal_node["timeout_time"]) {
+              ROS_FATAL_STREAM ("FBM2H file is missing a \"timeout_time\" entry!");
+              abort_rsbb();
+            }
+            /* if (goal_node["waypoints"]) { */
+            /*   for (YAML::const_iterator it = goal_node.begin(); it != goal_node.end(); ++it) { */
+            /*     string group_name = it->first.as<string>(); */
+            /*     if (! it->second.IsSequence()) { */
+            /*       ROS_FATAL_STREAM ("Benchmark \"" << b.name << "\" scoring \"" << it->first << "\" is not a sequence! :\n" << it->second); */
+            /*       abort_rsbb(); */
+            /*     } */
+            /*     for (Node const& item_node : it->second) { */
+            /*       b.scoring.push_back (ScoringItem (b.name, group_name, item_node)); */
+            /*     } */
+            /*   } */
+            /* } */
+            cout << "4" << endl;
+            if (goal_node["starting_pose"]) {
+              fbm2_starting_pose_ = goal_node["starting_pose"].as<std::vector<double>>();
+            }
+            if (goal_node["penalty_time"]) {
+              fbm2_penalty_time_ = goal_node["penalty_time"].as<double>();
+            }
+            if (goal_node["timeout_time"]) {
+              fbm2_timeout_time_ = goal_node["timeout_time"].as<double>();
+            }
+          }
+        }
+      }
+
+      cout << "\tREAD THE FILE:" << endl;
+      cout << "\tpenalty time:" << fbm2_penalty_time_ << endl;
+      cout << "\ttimeout time:" << fbm2_timeout_time_ << endl;
+      for (auto i = fbm2_starting_pose_.begin(); i != fbm2_starting_pose_.end(); ++i)
+        std::cout << *i << ' ';
+
+      /* if (fbm2_config["goal/starting_pose"]) */
+      /*   cout << "E ASISM" << endl; */
+      /* else */
+      /*   cout << "NAO E ASSIM" << endl; */
+
+      /* nh.getParam("/fbm2h/goal/penalty_time", fbm2_penalty_time_); */
+      /* nh.getParam("/fbm2h/goal/timeout_time", fbm2_timeout_time_); */
+      /* nh.getParam("/fbm2h/goal/starting_pose", fbm2_starting_pose_); */
+      /* //nh.getParam("/fbm2h/goal/waypoints", fbm2_waypoints_); */
+
+      /* cout << "FROM REFBOX:" << endl; */
+      /* cout << "penalty time:" << fbm2_penalty_time_ << endl; */
+      /* cout << "timeout time:" << fbm2_timeout_time_ << endl; */
+      /* /\* cout << "starting pose:" << fbm2_starting_pose_ << endl; *\/ */
+      /* /\* cout << "waypoints:" << fbm2_waypoints_ << endl; *\/ */
 
       vector<vector<float>> temp(fbm2_num_points_, vector<float>(3, 1));
 
