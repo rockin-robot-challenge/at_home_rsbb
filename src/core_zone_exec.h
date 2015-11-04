@@ -552,13 +552,12 @@ class ExecutingExternallyControlledBenchmark
     Duration total_timeout_;
     bool last_timeout_;
 
-    vector<vector<float>> fbm2_locations_;
+    vector<vector<double> > fbm2_locations_;
     int location_idx_;
+    double fbm2_penalty_time_;
+    double fbm2_timeout_time_;
     int fbm2_num_points_;
-    int fbm2_penalty_time_;
-    int fbm2_timeout_time_;
-    std::vector<double> fbm2_starting_pose_;
-    //std::vector<std::vector<double>> fbm2_waypoints_;
+    vector<double> fbm2_starting_pose_;
 
 
     void
@@ -567,6 +566,7 @@ class ExecutingExternallyControlledBenchmark
                       string const& payload = "")
     {
       if (client_state != client_state_) {
+        ROS_INFO("-------------------Setting Client state to: %d", client_state);
         client_state_ = client_state;
         annoying_client_payload_ = payload;
         rockin_benchmarking::ClientState msg;
@@ -584,6 +584,7 @@ class ExecutingExternallyControlledBenchmark
                       string const& payload = "")
     {
       if (refbox_state != refbox_state_) {
+        ROS_INFO("-------------------Setting RefBox state to: %d", refbox_state);
         refbox_state_ = refbox_state;
         annoying_refbox_payload_ = payload;
         rockin_benchmarking::RefBoxState msg;
@@ -626,7 +627,7 @@ class ExecutingExternallyControlledBenchmark
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::WAITING_MANUAL_OPERATION) {
               set_refbox_state (now, rockin_benchmarking::RefBoxState::EXECUTING_MANUAL_OPERATION);
               manual_operation_ = last_bmbox_state_->payload;
-	      ROS_INFO("BmBox: at_prepare");
+	      ROS_INFO("-------------------BmBox: at_prepare");
               // Stop main timer
               time_.stop_pause (now);
             }
@@ -635,7 +636,7 @@ class ExecutingExternallyControlledBenchmark
                  || (refbox_state_ == rockin_benchmarking::RefBoxState::EXECUTING_GOAL))
                && (client_state_ == rockin_benchmarking::ClientState::WAITING_GOAL)) {
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::TRANSMITTING_GOAL) {
-	      ROS_INFO("BmBox: transmitting goal");
+	      ROS_INFO("-------------------BmBox: transmitting goal");
               last_exec_start_ = now;
               exec_duration_ = Duration();
 
@@ -678,14 +679,14 @@ class ExecutingExternallyControlledBenchmark
           if ( (refbox_state_ == rockin_benchmarking::RefBoxState::EXECUTING_GOAL)
                && (client_state_ == rockin_benchmarking::ClientState::EXECUTING_GOAL)
                && (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::WAITING_RESULT)) {
-	    ROS_INFO("BmBox: goal tx");
+	    ROS_INFO("-------------------BmBox: goal tx");
             set_state (now, roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT, "Robot received goal, waiting for result");
           }
           break;
         case roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT:
           if ( (refbox_state_ == rockin_benchmarking::RefBoxState::READY)
                && (client_state_ == rockin_benchmarking::ClientState::COMPLETED_GOAL)) {
-	    ROS_INFO("BmBox: waiting reuslt");
+	    ROS_INFO("-------------------BmBox: waiting result");
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::TRANSMITTING_SCORE) {
               log_.log_string ("/rsbb_log/bmbox/score", now, last_bmbox_state_->payload);
               set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
@@ -714,7 +715,7 @@ class ExecutingExternallyControlledBenchmark
               set_client_state (now, rockin_benchmarking::ClientState::WAITING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is waiting for goal.");
-	      ROS_INFO("ROBOT: at_prepare");
+	      ROS_INFO("-------------------ROBOT: at_prepare");
             }
           }
           break;
@@ -725,20 +726,20 @@ class ExecutingExternallyControlledBenchmark
               set_client_state (now, rockin_benchmarking::ClientState::EXECUTING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is executing.");
-	      ROS_INFO("ROBOT: at_goal_tx");
+	      ROS_INFO("-------------------ROBOT: at_goal_tx");
             }
           }
           break;
         case roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT:
           if (client_state_ == rockin_benchmarking::ClientState::EXECUTING_GOAL) {
             if (msg.robot_state() == roah_rsbb_msgs::RobotState_State_RESULT_TX) {
-	      ROS_INFO("ROBOT: at_waiting_result");
+	      ROS_INFO("-------------------ROBOT: at_waiting_result");
               if (exec_duration_.isZero()) {
                 exec_duration_ = now - last_exec_start_;
                 if (event_.benchmark_code == "HOMF") {
                   set_state (now, state_, "Robot finished executing. Waiting for switches input from referee.");
 
-		  ROS_INFO("ROBOT: at_waiting_Result_2");
+		  ROS_INFO("-------------------ROBOT: at_waiting_Result_2");
                   // Time for the referee to press OMF Complete should be discarded
                   time_.stop_pause (now);
                 }
@@ -800,7 +801,7 @@ class ExecutingExternallyControlledBenchmark
 	msg.set_target_pose_x (fbm2_locations_[location_idx_][0]);
 	msg.set_target_pose_y (fbm2_locations_[location_idx_][1]);
 	msg.set_target_pose_theta (fbm2_locations_[location_idx_][2]);
-	ROS_INFO("publishing message!");
+	ROS_INFO("Publishing Goal!!");
       }
     }
 
@@ -809,6 +810,7 @@ class ExecutingExternallyControlledBenchmark
     {
       Time now = Time::now();
 
+      ROS_INFO("-------------------Received BmBox state: %d", msg->state);
       if (msg->state == last_bmbox_state_->state) {
         return;
       }
@@ -894,100 +896,60 @@ class ExecutingExternallyControlledBenchmark
       , total_timeout_ (event.benchmark.total_timeout)
       , location_idx_ (0)
     {
-      ros::NodeHandle nh;
+      std::vector< std::vector<double> > temp;
+
       string fbm2_locations;
-      nh.getParam("/roah_rsbb_core/fbm2_locations_file", fbm2_locations);
+      ss_.nh.getParam("/roah_rsbb_core/fbm2_locations_file", fbm2_locations);
       YAML::Node fbm2_config = YAML::LoadFile(fbm2_locations);
 
-      for (YAML::Node const& fbm2_node : fbm2_config) {
-        if (! fbm2_node["goal"]) {
-          ROS_FATAL_STREAM ("FBM2H file is missing a \"goal\" entry!");
-          abort_rsbb();
-        }
-
-        cout << "1" << endl;
-
-        if (fbm2_node["goal"]) {
-          cout << "2" << endl;
-
-          cout << "3" << endl;
-          for (YAML::Node const& goal_node : fbm2_node["goal"]) {
-            if (! goal_node["waypoints"]) {
-              ROS_FATAL_STREAM ("FBM2H file is missing a \"waypoints\" entry!");
-              abort_rsbb();
-            }
-            if (! goal_node["starting_pose"]) {
-              ROS_FATAL_STREAM ("FBM2H file is missing a \"starting_pose\" entry!");
-              abort_rsbb();
-            }
-            if (! goal_node["penalty_time"]) {
-              ROS_FATAL_STREAM ("FBM2H file is missing a \"penalty_time\" entry!");
-              abort_rsbb();
-            }
-            if (! goal_node["timeout_time"]) {
-              ROS_FATAL_STREAM ("FBM2H file is missing a \"timeout_time\" entry!");
-              abort_rsbb();
-            }
-            /* if (goal_node["waypoints"]) { */
-            /*   for (YAML::const_iterator it = goal_node.begin(); it != goal_node.end(); ++it) { */
-            /*     string group_name = it->first.as<string>(); */
-            /*     if (! it->second.IsSequence()) { */
-            /*       ROS_FATAL_STREAM ("Benchmark \"" << b.name << "\" scoring \"" << it->first << "\" is not a sequence! :\n" << it->second); */
-            /*       abort_rsbb(); */
-            /*     } */
-            /*     for (Node const& item_node : it->second) { */
-            /*       b.scoring.push_back (ScoringItem (b.name, group_name, item_node)); */
-            /*     } */
-            /*   } */
-            /* } */
-            cout << "4" << endl;
-            if (goal_node["starting_pose"]) {
-              fbm2_starting_pose_ = goal_node["starting_pose"].as<std::vector<double>>();
-            }
-            if (goal_node["penalty_time"]) {
-              fbm2_penalty_time_ = goal_node["penalty_time"].as<double>();
-            }
-            if (goal_node["timeout_time"]) {
-              fbm2_timeout_time_ = goal_node["timeout_time"].as<double>();
-            }
-          }
-        }
+      if (!fbm2_config["goal"]["starting_pose"]) {
+        ROS_FATAL_STREAM ("FBM2H file is missing a \"starting_pose\" entry!");
+        abort_rsbb();
       }
+      else
+        fbm2_starting_pose_ = fbm2_config["goal"]["starting_pose"].as<std::vector<double>>();
 
-      cout << "\tREAD THE FILE:" << endl;
-      cout << "\tpenalty time:" << fbm2_penalty_time_ << endl;
-      cout << "\ttimeout time:" << fbm2_timeout_time_ << endl;
-      for (auto i = fbm2_starting_pose_.begin(); i != fbm2_starting_pose_.end(); ++i)
-        std::cout << *i << ' ';
+      if (!fbm2_config["goal"]["penalty_time"]) {
+        ROS_FATAL_STREAM ("FBM2H file is missing a \"penalty_time\" entry!");
+        abort_rsbb();
+      }
+      else
+        fbm2_penalty_time_ = fbm2_config["goal"]["penalty_time"].as<double>();
 
-      /* if (fbm2_config["goal/starting_pose"]) */
-      /*   cout << "E ASISM" << endl; */
-      /* else */
-      /*   cout << "NAO E ASSIM" << endl; */
+      if (!fbm2_config["goal"]["timeout_time"]) {
+        ROS_FATAL_STREAM ("FBM2H file is missing a \"timeout_time\" entry!");
+        abort_rsbb();
+      }
+      else
+        fbm2_timeout_time_ = fbm2_config["goal"]["timeout_time"].as<double>();
 
-      /* nh.getParam("/fbm2h/goal/penalty_time", fbm2_penalty_time_); */
-      /* nh.getParam("/fbm2h/goal/timeout_time", fbm2_timeout_time_); */
-      /* nh.getParam("/fbm2h/goal/starting_pose", fbm2_starting_pose_); */
-      /* //nh.getParam("/fbm2h/goal/waypoints", fbm2_waypoints_); */
-
-      /* cout << "FROM REFBOX:" << endl; */
-      /* cout << "penalty time:" << fbm2_penalty_time_ << endl; */
-      /* cout << "timeout time:" << fbm2_timeout_time_ << endl; */
-      /* /\* cout << "starting pose:" << fbm2_starting_pose_ << endl; *\/ */
-      /* /\* cout << "waypoints:" << fbm2_waypoints_ << endl; *\/ */
-
-      vector<vector<float>> temp(fbm2_num_points_, vector<float>(3, 1));
-
-      for (int i = 0; i < fbm2_num_points_; i++)
-      {
-	std::vector<float> p;
-	nh.getParam("/roah_rsbb_core/p" + std::to_string(i), p);
-	temp[i][0] = p[0];
-	temp[i][1] = p[1];
-	temp[i][2] = p[2];
+      if (!fbm2_config["goal"]["waypoints"]) {
+        ROS_FATAL_STREAM ("FBM2H file is missing a \"timeout_time\" entry!");
+        abort_rsbb();
+      }
+      else {
+        for (YAML::const_iterator it = fbm2_config["goal"]["waypoints"].begin(); it != fbm2_config["goal"]["waypoints"].end(); ++it) {
+          std::vector<double> wp = (*it).as<std::vector<double>>();
+          temp.push_back(wp);
+        }
       }
 
       fbm2_locations_ = temp;
+      fbm2_num_points_ = fbm2_locations_.size();
+
+      cout << "RefBox - FBM2 Config:" << endl;
+      cout << "Penalty Time: " << fbm2_penalty_time_ << endl;
+      cout << "Timeout Time: " << fbm2_timeout_time_ << endl;
+
+      cout << "Starting Pose: [ ";
+      for (auto i = fbm2_starting_pose_.begin(); i != fbm2_starting_pose_.end(); ++i)
+        cout << *i << ' ';
+      cout << "]" << endl;
+
+      cout << "Waypoints: " << endl;
+      for (uint i = 0; i < fbm2_locations_.size(); i++)
+        cout << "\tWP #" << i << ": [ " << fbm2_locations_[i][0] << ' ' << fbm2_locations_[i][1] << ' ' << fbm2_locations_[i][2] << " ]" << endl;
+      cout << endl;
     }
 
     void
