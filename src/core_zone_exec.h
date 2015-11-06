@@ -95,6 +95,8 @@ class ExecutingBenchmark
     {
       Time now = Time::now();
 
+      cout << "AT PHASE POST --- REASON: " << desc << endl;
+
       phase_ = PHASE_POST;
       last_stop_time_ = now;
       set_state (now, roah_rsbb_msgs::BenchmarkState_State_STOP, desc);
@@ -584,7 +586,7 @@ class ExecutingExternallyControlledBenchmark
                       string const& payload = "")
     {
       if (refbox_state != refbox_state_) {
-        ROS_INFO("-------------------Setting RefBox state to: %d", refbox_state);
+        ROS_INFO("-------------------Setting RefBox state to: %d-------------------", refbox_state);
         refbox_state_ = refbox_state;
         annoying_refbox_payload_ = payload;
         rockin_benchmarking::RefBoxState msg;
@@ -770,12 +772,13 @@ class ExecutingExternallyControlledBenchmark
                 waiting_for_omf_complete_ = true;
               }
 	      else if (event_.benchmark_code == "HNF") {
-		if (location_idx_ < fbm2_num_points_)
+                if (location_idx_ < fbm2_num_points_) {
 		  location_idx_++;
-		else {
-		  set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
-		  phase_post ("Benchmark complete! Received score from BmBox: " + last_bmbox_state_->payload);
-		}
+                  if (location_idx_ == fbm2_num_points_ - 1) {
+		    set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
+		    phase_post ("Benchmark complete! Received score from BmBox: " + last_bmbox_state_->payload);
+                  }
+                }
 
                 set_refbox_state (now, rockin_benchmarking::RefBoxState::READY);
                 set_client_state (now, rockin_benchmarking::ClientState::COMPLETED_GOAL, "");
@@ -810,7 +813,6 @@ class ExecutingExternallyControlledBenchmark
     {
       Time now = Time::now();
 
-      ROS_INFO("-------------------Received BmBox state: %d", msg->state);
       if (msg->state == last_bmbox_state_->state) {
         return;
       }
@@ -833,18 +835,18 @@ class ExecutingExternallyControlledBenchmark
       /* changed_switches_.clear(); */
       /* damaged_switches_ = 0; */
 
-      /* // OPF: Timeout should also happen for each object. */
-      /* // Therefore, timeout refers to each object and a total_timeout */
-      /* // is added for the whole benchmark. */
-      /* total_timeout_ -= time_.get_elapsed (now); */
-      /* if (event_.benchmark.timeout < total_timeout_) { */
-      /*   time_.start_reset (now, event_.benchmark.timeout); */
-      /*   last_timeout_ = false; */
-      /* } */
-      /* else { */
-      /*   time_.start_reset (now, total_timeout_); */
-      /*   last_timeout_ = true; */
-      /* } */
+      // OPF: Timeout should also happen for each object.
+      // Therefore, timeout refers to each object and a total_timeout
+      // is added for the whole benchmark.
+      total_timeout_ -= time_.get_elapsed (now);
+      if (event_.benchmark.timeout < total_timeout_) {
+        time_.start_reset (now, event_.benchmark.timeout);
+        last_timeout_ = false;
+      }
+      else {
+        time_.start_reset (now, total_timeout_);
+        last_timeout_ = true;
+      }
     }
 
     void
@@ -853,10 +855,14 @@ class ExecutingExternallyControlledBenchmark
       if (refbox_state_ != rockin_benchmarking::RefBoxState::RECEIVED_SCORE) {
         if (stoped_due_to_timeout_
             && (! last_timeout_)) {
+          // Partial timeout
+          ROS_INFO("TIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUT");
           set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: timeout");
           phase_exec ("Robot timedout a goal, trying the next one...");
         }
         else {
+          // Global timeout
+          ROS_INFO("GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT");
           set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: stop");
         }
       }
