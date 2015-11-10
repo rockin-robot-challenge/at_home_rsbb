@@ -718,7 +718,6 @@ class ExecutingExternallyControlledBenchmark
           /*   set_state (now, roah_rsbb_msgs::BenchmarkState_State_GOAL_TX, "Robot is waiting for goal."); */
           /*   set_refbox_state (now, rockin_benchmarking::RefBoxState::EXECUTING_GOAL); */
           /*   set_client_state (now, rockin_benchmarking::ClientState::WAITING_GOAL); */
-	      ROS_INFO("-------------------ROBOT: NOVO PARTIMENTO VER SE ESTA MERDA FAUNCIONA");
           /* } */
           if (client_state_ != rockin_benchmarking::ClientState::WAITING_GOAL) {
             if (msg.robot_state() == roah_rsbb_msgs::RobotState_State_WAITING_GOAL) {
@@ -873,6 +872,7 @@ class ExecutingExternallyControlledBenchmark
           if (event_.benchmark_code == "HNF") {
             if (location_idx_ < fbm2_num_points_) {
               location_idx_++;
+              //set_client_state (now, rockin_benchmarking::ClientState::COMPLETED_GOAL);
               cout << "\n\nINCREMENTING LOCATION IDX DUE TO TIMEOUT!!!!\n\n";
               if (location_idx_ == fbm2_num_points_ - 1) {
                 set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
