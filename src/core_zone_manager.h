@@ -332,7 +332,7 @@ class Zone
         zone.start_enabled = false;
         zone.stop_enabled = false;
 
-        Duration allowed_skew = Duration (param_direct<double> ("~allowed_skew", 0.1));
+        Duration allowed_skew = Duration (param_direct<double> ("~allowed_skew", 0.5));
         if (current_event_->second.benchmark.code == "HSUF") {
           vector<string> teams_out_of_sync;
           for (roah_rsbb::RobotInfo const& ri : ss_.active_robots.get ()) {

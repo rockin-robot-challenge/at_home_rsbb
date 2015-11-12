@@ -568,7 +568,7 @@ class ExecutingExternallyControlledBenchmark
                       string const& payload = "")
     {
       if (client_state != client_state_) {
-        ROS_INFO("-------------------Setting Client state to: %d", client_state);
+        // ROS_INFO("-------------------Setting Client state to: %d", client_state);
         client_state_ = client_state;
         annoying_client_payload_ = payload;
         rockin_benchmarking::ClientState msg;
@@ -586,7 +586,7 @@ class ExecutingExternallyControlledBenchmark
                       string const& payload = "")
     {
       if (refbox_state != refbox_state_) {
-        ROS_INFO("-------------------Setting RefBox state to: %d-------------------", refbox_state);
+        // ROS_INFO("-------------------Setting RefBox state to: %d-------------------", refbox_state);
         refbox_state_ = refbox_state;
         annoying_refbox_payload_ = payload;
         rockin_benchmarking::RefBoxState msg;
@@ -626,7 +626,7 @@ class ExecutingExternallyControlledBenchmark
         case roah_rsbb_msgs::BenchmarkState_State_PREPARE:
           if ( (refbox_state_ == rockin_benchmarking::RefBoxState::READY)
                && (client_state_ == rockin_benchmarking::ClientState::WAITING_GOAL)) {
-            ROS_INFO("-------------------BmBox: at_prepare");
+                  //ROS_INFO("-------------------BmBox: at_prepare");
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::WAITING_MANUAL_OPERATION) {
               set_refbox_state (now, rockin_benchmarking::RefBoxState::EXECUTING_MANUAL_OPERATION);
               manual_operation_ = last_bmbox_state_->payload;
@@ -637,9 +637,9 @@ class ExecutingExternallyControlledBenchmark
           if ( ( (refbox_state_ == rockin_benchmarking::RefBoxState::READY)
                  || (refbox_state_ == rockin_benchmarking::RefBoxState::EXECUTING_GOAL))
                && (client_state_ == rockin_benchmarking::ClientState::WAITING_GOAL)) {
-	      ROS_INFO("-------------------BmBox: PRE ---- transmitting goal");
+                  //ROS_INFO("-------------------BmBox: PRE ---- transmitting goal");
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::TRANSMITTING_GOAL) {
-	      ROS_INFO("-------------------BmBox: transmitting goal");
+                    //ROS_INFO("-------------------BmBox: transmitting goal");
               last_exec_start_ = now;
               exec_duration_ = Duration();
 
@@ -675,23 +675,23 @@ class ExecutingExternallyControlledBenchmark
               set_refbox_state (now, rockin_benchmarking::RefBoxState::EXECUTING_GOAL);
               set_client_state (now, rockin_benchmarking::ClientState::EXECUTING_GOAL);
               // No check_bmbox_transition here
-            } else if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::READY) {
-              cout << "\n\nMAIS UM PRINT BONITO\n\n";
-            }
+            }/*  else if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::READY) { */
+            /*   cout << "\n\nMAIS UM PRINT BONITO\n\n"; */
+            /* } */
           }
           break;
         case roah_rsbb_msgs::BenchmarkState_State_GOAL_TX:
           if ( (refbox_state_ == rockin_benchmarking::RefBoxState::EXECUTING_GOAL)
                && (client_state_ == rockin_benchmarking::ClientState::EXECUTING_GOAL)
                && (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::WAITING_RESULT)) {
-	    ROS_INFO("-------------------BmBox: goal tx");
+                  //ROS_INFO("-------------------BmBox: goal tx");
             set_state (now, roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT, "Robot received goal, waiting for result");
           }
           break;
         case roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT:
           if ( (refbox_state_ == rockin_benchmarking::RefBoxState::READY)
                && (client_state_ == rockin_benchmarking::ClientState::COMPLETED_GOAL)) {
-	    ROS_INFO("-------------------BmBox: waiting result");
+                  //ROS_INFO("-------------------BmBox: waiting result");
             if (last_bmbox_state_->state == rockin_benchmarking::BmBoxState::TRANSMITTING_SCORE) {
               log_.log_string ("/rsbb_log/bmbox/score", now, last_bmbox_state_->payload);
               set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
@@ -725,7 +725,7 @@ class ExecutingExternallyControlledBenchmark
               set_client_state (now, rockin_benchmarking::ClientState::WAITING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is waiting for goal.");
-	      ROS_INFO("-------------------ROBOT: at_prepare");
+	      //ROS_INFO("-------------------ROBOT: at_prepare");
             }
           }
           break;
@@ -736,20 +736,20 @@ class ExecutingExternallyControlledBenchmark
               set_client_state (now, rockin_benchmarking::ClientState::EXECUTING_GOAL);
               check_bmbox_transition();
               set_state (now, state_, "Robot is executing.");
-	      ROS_INFO("-------------------ROBOT: at_goal_tx");
+	      //ROS_INFO("-------------------ROBOT: at_goal_tx");
             }
           }
           break;
         case roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT:
           if (client_state_ == rockin_benchmarking::ClientState::EXECUTING_GOAL) {
             if (msg.robot_state() == roah_rsbb_msgs::RobotState_State_RESULT_TX) {
-	      ROS_INFO("-------------------ROBOT: at_waiting_result");
+                    //ROS_INFO("-------------------ROBOT: at_waiting_result");
               if (exec_duration_.isZero()) {
                 exec_duration_ = now - last_exec_start_;
                 if (event_.benchmark_code == "HOMF") {
                   set_state (now, state_, "Robot finished executing. Waiting for switches input from referee.");
 
-		  ROS_INFO("-------------------ROBOT: at_waiting_Result_2");
+		  //ROS_INFO("-------------------ROBOT: at_waiting_Result_2");
                   // Time for the referee to press OMF Complete should be discarded
                   time_.stop_pause (now);
                 }
@@ -788,6 +788,7 @@ class ExecutingExternallyControlledBenchmark
                   }
                 }
 
+                //cout << "\n\nCENAS COISAS ACONTECERAM\n\n" << flush;
                 set_refbox_state (now, rockin_benchmarking::RefBoxState::READY);
                 set_client_state (now, rockin_benchmarking::ClientState::COMPLETED_GOAL, "");
                 check_bmbox_transition();
@@ -814,6 +815,7 @@ class ExecutingExternallyControlledBenchmark
 	msg.set_target_pose_theta (fbm2_locations_[location_idx_][2]);
 
 	ROS_INFO("Publishing Goal!!");
+        ROS_INFO("Goal: %f, %f, %f", fbm2_locations_[location_idx_][0], fbm2_locations_[location_idx_][1], fbm2_locations_[location_idx_][2]);
       }
     }
 
@@ -865,15 +867,15 @@ class ExecutingExternallyControlledBenchmark
         if (stoped_due_to_timeout_
             && (! last_timeout_)) {
           // Partial timeout
-          ROS_INFO("TIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUT");
-          set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: timeout");
+          //ROS_INFO("TIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUT");
+          //set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: timeout");
 
           // If there is a partial timeout, update the FBM2 location index accordingly
           if (event_.benchmark_code == "HNF") {
             if (location_idx_ < fbm2_num_points_) {
               location_idx_++;
-              //set_client_state (now, rockin_benchmarking::ClientState::COMPLETED_GOAL);
-              cout << "\n\nINCREMENTING LOCATION IDX DUE TO TIMEOUT!!!!\n\n";
+              set_client_state (now, rockin_benchmarking::ClientState::COMPLETED_GOAL, "reason: timeout");
+              //cout << "\n\nINCREMENTING LOCATION IDX DUE TO TIMEOUT!!!!\n\n";
               if (location_idx_ == fbm2_num_points_ - 1) {
                 set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE);
                 set_client_state (now, rockin_benchmarking::ClientState::END);
@@ -883,11 +885,13 @@ class ExecutingExternallyControlledBenchmark
             set_state (now, roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT, "Robot received goal, waiting for result");
           }
 
+          /* ros::Duration(1).sleep(); */
+          /* set_client_state (now, rockin_benchmarking::ClientState::READY); */
           phase_exec ("Robot timedout a goal, trying the next one...");
         }
         else {
           // Global timeout
-          ROS_INFO("GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT");
+          //ROS_INFO("GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT || GOBAL TIMEOUT");
           set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: stop");
           set_client_state (now, rockin_benchmarking::ClientState::END);
         }
