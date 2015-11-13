@@ -7,8 +7,22 @@
     <node name="dummy_tf_ref_board" pkg="tf" type="static_transform_publisher" args="1 0 0 0 0 0 1 origin ref_board 100" respawn="true"/>
   </group>
 
-  <group ns="fbm2h">
-    <node name="bmbox" pkg="rockin_benchmarking" type="fbm2h" respawn="true"/>
-  </group>
+  <group ns="fbm2h">		
+    <rosparam file="$(find rockin_scoring)/config/fbm2h.yaml" command="load" />
+    <node name="bmbox" pkg="rockin_scoring" type="fbm2h"/> <!-- output="screen" launch-prefix="gnome-terminal -e"/-->
+    <node name="client" pkg="rockin_scoring" type="fbm2h_client_test"/> <!--output="screen"launch-prefix="gnome-terminal -e"/-->
+    <!--node name="world_map" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 world map 100"/-->
+    <!--node name="map_server" pkg="map_server" type="map_server" args="$(find rockin_mocap)/config/fbm2h_map.yaml"/-->
+    <!--node name="mocap" pkg="mocap_optitrack" type="mocap_node" respawn="false" launch-prefix="" required="true">
+      <rosparam file="$(find rockin_mocap)/config/fbm2h_mocap.yaml" command="load"/>
+    </node-->	
+  </group>    
+
+  <node pkg="tf" type="static_transform_publisher" name="dummy_broadcaster" args="1 0 0 0 0 0 1 /robot_at_home /actual_robot 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="dummy_broadcaster2" args="1 0 0 0 0 0 1 /world /robot_at_home 100"/>
+
+  <!--group ns="fbm2h">
+    <node name="bmbox" pkg="rockin_scoring" type="fbm2h" respawn="true"/>
+  </group-->
 
 </launch>
