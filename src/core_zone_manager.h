@@ -167,7 +167,8 @@ class Zone
           }
           ok = true;
         }
-        catch (...) {
+        catch (const std::exception &exc) {
+          std::cerr << exc.what();
           ROS_ERROR_STREAM ("Failed to create a private channel. Retrying on next port.");
         }
       }
