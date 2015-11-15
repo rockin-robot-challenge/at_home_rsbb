@@ -3,14 +3,13 @@ RoCKIn@Home Referee, Scoring and Benchmarking Box
 
 This repository contains the RoCKIn@Home Referee, Scoring and Benchmarking Box.
 
-The repository *RoAH RSBB Comm* from https://github.com/joaocgreis/roah_rsbb_comm
+The repository *RoAH RSBB Comm* from https://github.com/rockin-robot-challenge/at_home_rsbb_comm
 is included as a git submodule.
 
 :warning: Please remember to always update right before the competitions!
 ```bash
-cd roah_rsbb/
 git pull
-git submodule update --init --recursive
+git submodule update --init
 ```
 
 
@@ -45,8 +44,7 @@ sudo easy_install python-Levenshtein
 
 After `git clone` and after every `git pull`, please do:
 ```bash
-cd roah_rsbb/
-git submodule update --init --recursive
+git submodule update --init
 ```
 
 Compile as a normal ROS package in your Catkin workspace. Make sure
