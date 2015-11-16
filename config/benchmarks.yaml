@@ -66,8 +66,8 @@
 - name: RoCKIn@Home Functionality Benchmark 2
   desc: Navigation Functionality
   code: HNF
-  timeout: 20.000 #timeout: 30.000
-  total_timeout: 360.000 #total_timeout: 360.000
+  timeout: 20.0
+  total_timeout: 360.0
 - name: RoCKIn@Home Functionality Benchmark 3
   desc: Speech Understanding Functionality
   code: HSUF
