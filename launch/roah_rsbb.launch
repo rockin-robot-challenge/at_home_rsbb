@@ -5,7 +5,7 @@
   <arg name="benchmarks_file" default="$(find roah_rsbb)/config/benchmarks.yaml"/>
   <arg name="schedule_file" default="$(find roah_rsbb)/config/schedule.yaml"/>
   <arg name="passwords_file" default="$(find roah_rsbb)/config/passwords.yaml"/>
-  <arg name="fbm2_locations_file" default="$(find rockin_benchmarking)/config/fbm2_locations.yaml"/>
+  <arg name="fbm2_locations_file" default="$(find rockin_benchmarking)/config/fbm2h.yaml"/>
   <arg name="log_dir" default="$(find roah_rsbb)/log"/>
   <arg name="bell_ring_command" default="mplayer $(find roah_rsbb)/bell.mp3"/>
   <arg name="timeout_ring_command" default="mplayer $(find roah_rsbb)/timeout.mp3"/>
