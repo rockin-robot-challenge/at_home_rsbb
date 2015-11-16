@@ -72,7 +72,7 @@ class Zone
                 || (e.benchmark_code == "HWV")
                 || (e.benchmark_code == "HCFGAC")
                 || (e.benchmark_code == "HOPF")
-                || (e.benchmark_code == "HOMF")
+                || (e.benchmark_code == "HNF")
                 || (e.benchmark_code == "HSUF"))) {
           ROS_FATAL_STREAM ("Zone " << name_ << ": unsupported benchmark code " << e.benchmark_code);
           abort_rsbb();
@@ -89,7 +89,7 @@ class Zone
              || (e.benchmark_code == "HWV")
              || (e.benchmark_code == "HCFGAC")
              || (e.benchmark_code == "HOPF")
-             || (e.benchmark_code == "HOMF")) {
+             || (e.benchmark_code == "HNF")) {
           if (e.team == "ALL") {
             ROS_FATAL_STREAM ("Zone " << name_ << ": benchmark code " << e.benchmark_code << " not supported for team ALL");
             abort_rsbb();
@@ -158,7 +158,7 @@ class Zone
             executing_benchmark_.reset (new ExecutingSimpleBenchmark (ss_, current_event_->second, boost::bind (&Zone::end, this), ri.robot));
           }
           else if ( (current_event_->second.benchmark_code == "HOPF")
-                    || (current_event_->second.benchmark_code == "HOMF")) {
+                    || (current_event_->second.benchmark_code == "HNF")) {
             executing_benchmark_.reset (new ExecutingExternallyControlledBenchmark (ss_, current_event_->second, boost::bind (&Zone::end, this), ri.robot));
           }
           else {
@@ -167,7 +167,8 @@ class Zone
           }
           ok = true;
         }
-        catch (...) {
+        catch (const std::exception& exc) {
+          std::cerr << exc.what();
           ROS_ERROR_STREAM ("Failed to create a private channel. Retrying on next port.");
         }
       }
@@ -332,7 +333,7 @@ class Zone
         zone.start_enabled = false;
         zone.stop_enabled = false;
 
-        Duration allowed_skew = Duration (param_direct<double> ("~allowed_skew", 0.1));
+        Duration allowed_skew = Duration (param_direct<double> ("~allowed_skew", 0.5));
         if (current_event_->second.benchmark.code == "HSUF") {
           vector<string> teams_out_of_sync;
           for (roah_rsbb::RobotInfo const& ri : ss_.active_robots.get ()) {
