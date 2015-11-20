@@ -72,7 +72,8 @@ class DisplayText
 
       text_ << endl;
       text_ << " - " << to_string (now);
-      text_ << endl;
+      //text_ << endl;
+      text_ << " - ";
       text_ << msg;
     }
 
