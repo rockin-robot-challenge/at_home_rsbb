@@ -959,6 +959,8 @@ class ExecutingExternallyControlledBenchmark
       , total_timeout_ (event.benchmark.total_timeout)
       , location_idx_ (0)
     {
+      Time now = Time::now();
+
       std::vector< std::vector<double> > temp;
 
       string fbm2_locations;
@@ -1003,21 +1005,25 @@ class ExecutingExternallyControlledBenchmark
       fbm2_locations_ = temp;
       fbm2_num_points_ = fbm2_locations_.size();
 
-      cout << "RefBox - FBM2 Config:" << endl;
-      cout << "Penalty Time: " << fbm2_penalty_time_ << endl;
-      cout << "Timeout Time: " << fbm2_timeout_time_ << endl;
+      ostringstream pl;
 
-      cout << "Starting Pose: [ ";
+      pl << "RefBox - FBM2 Config:" << endl;
+      pl << "Penalty Time: " << fbm2_penalty_time_ << endl;
+      pl << "Timeout Time: " << fbm2_timeout_time_ << endl;
+
+      pl << "Starting Pose: [ ";
       for (auto i = fbm2_starting_pose_.begin(); i != fbm2_starting_pose_.end(); ++i) {
-        cout << *i << ' ';
+        pl << *i << ' ';
       }
-      cout << "]" << endl;
+      pl << "]" << endl;
 
-      cout << "Waypoints: " << endl;
+      pl << "Waypoints: " << endl;
       for (uint i = 0; i < fbm2_locations_.size(); i++) {
-        cout << "\tWP #" << i << ": [ " << fbm2_locations_[i][0] << ' ' << fbm2_locations_[i][1] << ' ' << fbm2_locations_[i][2] << " ]" << endl;
+        pl << "\tWP #" << i << ": [ " << fbm2_locations_[i][0] << ' ' << fbm2_locations_[i][1] << ' ' << fbm2_locations_[i][2] << " ]" << endl;
       }
-      cout << endl;
+      pl << endl;
+
+      log_.log_string ("/rsbb_log/waypoints_loading", now, pl.str());
     }
 
     void
