@@ -857,7 +857,7 @@ class ExecutingExternallyControlledBenchmark
     void
     phase_exec_2 (Time const& now)
     {
-      /* waiting_for_omf_complete_ = false; */
+      waiting_for_omf_complete_ = false;
       /* goal_initial_state_.clear(); */
       /* goal_switches_.clear(); */
       /* on_switches_.clear(); */
