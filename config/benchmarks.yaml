@@ -61,13 +61,13 @@
 - name: RoCKIn@Home Functionality Benchmark 1
   desc: Object Perception Functionality
   code: HOPF
-  timeout: 120.000
+  timeout: 600.000
   total_timeout: 600.000
 - name: RoCKIn@Home Functionality Benchmark 2
   desc: Navigation Functionality
   code: HNF
-  timeout: 20.0
-  total_timeout: 360.0
+  timeout: 90.0 #120.0
+  total_timeout: 3600.0
 - name: RoCKIn@Home Functionality Benchmark 3
   desc: Speech Understanding Functionality
   code: HSUF
