@@ -886,7 +886,6 @@ class ExecutingExternallyControlledBenchmark
             && (! last_timeout_)) {
           // Partial timeout
           //ROS_INFO("TIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUT");
-          //set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: timeout");
 
           /* if (location_idx_ >= fbm2_num_points_) { */
           /*   set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE); */
@@ -907,6 +906,10 @@ class ExecutingExternallyControlledBenchmark
               }
             }
             set_state (now, roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT, "Robot received goal, waiting for result");
+          }
+          else {
+            set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: timeout");
+            set_client_state (now, rockin_benchmarking::ClientState::END);
           }
 
           /* ros::Duration(1).sleep(); */
