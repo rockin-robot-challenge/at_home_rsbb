@@ -81,3 +81,21 @@
     - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: Watermelon }
     - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Watermelon }
     - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
+
+- zone: Testing ROSolution
+  schedule:
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: ROSolution }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: ROSolution }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: ROSolution }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: ROSolution }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: ROSolution }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }
+
+- zone: Testing Trinity
+  schedule:
+    - { benchmark: HGTKMH, round: 1, run: 1, scheduled_time: 2015-12-31 00:00:00, team: Trinity }
+    - { benchmark: HWV,    round: 1, run: 1, scheduled_time: 2015-12-31 00:01:00, team: Trinity }
+    - { benchmark: HCFGAC, round: 1, run: 1, scheduled_time: 2015-12-31 00:02:00, team: Trinity }
+    - { benchmark: HOPF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:03:00, team: Trinity }
+    - { benchmark: HNF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:04:00, team: Trinity }
+    - { benchmark: HSUF,   round: 1, run: 1, scheduled_time: 2015-12-31 00:05:00, team: ALL }

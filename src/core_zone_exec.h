@@ -857,7 +857,7 @@ class ExecutingExternallyControlledBenchmark
     void
     phase_exec_2 (Time const& now)
     {
-      /* waiting_for_omf_complete_ = false; */
+      waiting_for_omf_complete_ = false;
       /* goal_initial_state_.clear(); */
       /* goal_switches_.clear(); */
       /* on_switches_.clear(); */
@@ -886,7 +886,6 @@ class ExecutingExternallyControlledBenchmark
             && (! last_timeout_)) {
           // Partial timeout
           //ROS_INFO("TIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUTTIMEOUT");
-          //set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: timeout");
 
           /* if (location_idx_ >= fbm2_num_points_) { */
           /*   set_refbox_state (now, rockin_benchmarking::RefBoxState::RECEIVED_SCORE); */
@@ -907,6 +906,10 @@ class ExecutingExternallyControlledBenchmark
               }
             }
             set_state (now, roah_rsbb_msgs::BenchmarkState_State_WAITING_RESULT, "Robot received goal, waiting for result");
+          }
+          else {
+            set_refbox_state (now, rockin_benchmarking::RefBoxState::END, "reason: timeout");
+            set_client_state (now, rockin_benchmarking::ClientState::END);
           }
 
           /* ros::Duration(1).sleep(); */
@@ -956,6 +959,8 @@ class ExecutingExternallyControlledBenchmark
       , total_timeout_ (event.benchmark.total_timeout)
       , location_idx_ (0)
     {
+      Time now = Time::now();
+
       std::vector< std::vector<double> > temp;
 
       string fbm2_locations;
@@ -1000,21 +1005,25 @@ class ExecutingExternallyControlledBenchmark
       fbm2_locations_ = temp;
       fbm2_num_points_ = fbm2_locations_.size();
 
-      cout << "RefBox - FBM2 Config:" << endl;
-      cout << "Penalty Time: " << fbm2_penalty_time_ << endl;
-      cout << "Timeout Time: " << fbm2_timeout_time_ << endl;
+      ostringstream pl;
 
-      cout << "Starting Pose: [ ";
+      pl << "RefBox - FBM2 Config:" << endl;
+      pl << "Penalty Time: " << fbm2_penalty_time_ << endl;
+      pl << "Timeout Time: " << fbm2_timeout_time_ << endl;
+
+      pl << "Starting Pose: [ ";
       for (auto i = fbm2_starting_pose_.begin(); i != fbm2_starting_pose_.end(); ++i) {
-        cout << *i << ' ';
+        pl << *i << ' ';
       }
-      cout << "]" << endl;
+      pl << "]" << endl;
 
-      cout << "Waypoints: " << endl;
+      pl << "Waypoints: " << endl;
       for (uint i = 0; i < fbm2_locations_.size(); i++) {
-        cout << "\tWP #" << i << ": [ " << fbm2_locations_[i][0] << ' ' << fbm2_locations_[i][1] << ' ' << fbm2_locations_[i][2] << " ]" << endl;
+        pl << "\tWP #" << i << ": [ " << fbm2_locations_[i][0] << ' ' << fbm2_locations_[i][1] << ' ' << fbm2_locations_[i][2] << " ]" << endl;
       }
-      cout << endl;
+      pl << endl;
+
+      log_.log_string ("/rsbb_log/waypoints_loading", now, pl.str());
     }
 
     void
