@@ -72,6 +72,11 @@ appear:
 rm ~/.config/ros.org/rqt_gui.ini
 ```
 
+For testing of FBM1 and FBM2 without a MOCAP system and the benchmarking modules run the following in parallel with the RSBB:
+```bash
+roslaunch roah_rsbb dummy_benchmarking_module.launch
+```
+
 
 ## Securing the RSBB
 
