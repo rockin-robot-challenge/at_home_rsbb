@@ -1,6 +1,9 @@
 RoCKIn@Home Referee, Scoring and Benchmarking Box
 =================================================
 
+:warning: **This version of the RSBB is deprecated. Use the new version: https://github.com/rockin-robot-challenge/rsbb **
+
+
 This repository contains the RoCKIn@Home Referee, Scoring and Benchmarking Box.
 
 The repository *RoAH RSBB Comm* from https://github.com/rockin-robot-challenge/at_home_rsbb_comm
